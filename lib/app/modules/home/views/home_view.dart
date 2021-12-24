@@ -1,5 +1,5 @@
 import 'package:e_wallet/app/data/model/card_model.dart';
-import 'package:e_wallet/app/data/theme/theme_data.dart';
+import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -24,22 +24,20 @@ class HomeView extends GetView<HomeController> {
           titleTextStyle:
               GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold),
           centerTitle: true,
-          actions: <Widget>[
-            Obx(() {
-              return IconButton(
-                  splashRadius: 12,
-                  onPressed: () => controller.themeSwitcher(),
-                  icon: FaIcon(
-                    controller.isDarkMode.value
-                        ? FontAwesomeIcons.moon
-                        : FontAwesomeIcons.lightbulb,
-                    color: controller.isDarkMode.value
-                        ? Colors.white
-                        : Colors.amber,
-                    size: 18,
-                  ));
-            })
-          ],
+          leading: Obx(() {
+            return IconButton(
+                splashRadius: 12,
+                onPressed: () => controller.themeSwitcher(),
+                icon: FaIcon(
+                  controller.isDarkMode.value
+                      ? FontAwesomeIcons.moon
+                      : FontAwesomeIcons.lightbulb,
+                  color:
+                      controller.isDarkMode.value ? Colors.white : Colors.amber,
+                  size: 18,
+                ));
+          }),
+          actions: <Widget>[],
           bottom: TabBar(
             indicatorColor: Colors.white,
             indicatorWeight: 4,
@@ -65,34 +63,41 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _homeBody() => SafeArea(
-        child: FutureBuilder(
-            future: controller.refreshCards(),
-            builder: (context, snapshot) {
-              return Obx(() {
-                return ListView.builder(
-                    itemCount: controller.cards.length,
-                    itemBuilder: (context, index) {
-                      if (controller.cards.isEmpty) {
-                        return ElevatedButton(
-                          onPressed: () => controller.scrollToAddProductPage(),
-                          child: Text(
-                            'Add product',
-                            style: GoogleFonts.roboto(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      } else {
-                        final cardDetails = controller.cards[index];
-                        print(index);
-                        print('${controller.cards[index].id}');
-                        return cardsMain(context, cardDetails, index);
-                      }
-                    });
-              });
-            }),
+        child: Obx(() {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              FutureBuilder(
+                  future: controller.refreshCards(),
+                  builder: (context, snapshot) {
+                    return Scrollbar(
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: controller.cards.length,
+                          itemBuilder: (context, index) {
+                            final cardDetails = controller.cards[index];
+                            print(index);
+                            print('${controller.cards[index].id}');
+                            return cardsMain(context, cardDetails, index);
+                          }),
+                    );
+                  }),
+              controller.cards.isEmpty
+                  ? ElevatedButton(
+                      onPressed: () => controller.scrollToAddProductPage(),
+                      child: Text(
+                        'Add product',
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : SizedBox.shrink()
+            ],
+          );
+        }),
       );
 
-  Padding cardsMain(BuildContext context, CardModel cardDetails, int index) {
+  Widget cardsMain(BuildContext context, CardModel cardDetails, int index) {
     print('card color - ${cardDetails.cardColor}');
     String removeColortext = cardDetails.cardColor.replaceAll('Color', '');
     String removeBracketLeft = removeColortext.replaceAll('(', '');
@@ -102,15 +107,16 @@ class HomeView extends GetView<HomeController> {
     String firstFourNumbers = cardNumber.substring(0, 4);
     String lastFourNumbers = cardNumber.substring(12);
 
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Stack(
-        alignment: Alignment.topRight,
-        children: [
-          Container(
-            height: 200,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
+    return FadedScaleAnimation(
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
                 color: Color(int.parse(cardColor)),
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
@@ -123,93 +129,107 @@ class HomeView extends GetView<HomeController> {
                     blurRadius: 8.0,
                     spreadRadius: 1.0,
                   ),
-                ]),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    cardDetails.name,
-                    style: Theme.of(context).textTheme.headline3,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: firstFourNumbers,
-                      style: Theme.of(context).textTheme.headline3?.copyWith(
-                          fontWeight: FontWeight.w300, letterSpacing: 2),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: '********',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                  fontWeight: FontWeight.w300,
-                                  letterSpacing: 2),
-                        ),
-                        TextSpan(
-                          text: lastFourNumbers,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                  fontWeight: FontWeight.w300,
-                                  letterSpacing: 2),
-                        ),
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: 'Exp on - ',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          ?.copyWith(fontWeight: FontWeight.w400, fontSize: 14),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: cardDetails.expDate.toString(),
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
+                image: DecorationImage(
+                  image: AssetImage('assets/images/glitter.jpg'),
+                  fit: BoxFit.cover,
+                  invertColors: false,
+                  opacity: 0.1,
+                  colorFilter: ColorFilter.mode(
+                      Color(int.parse(cardColor)), BlendMode.lighten),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      cardDetails.name,
+                      style: Theme.of(context).textTheme.headline3,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: firstFourNumbers,
+                        style: Theme.of(context).textTheme.headline3?.copyWith(
+                            fontWeight: FontWeight.w300, letterSpacing: 2),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '********',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    letterSpacing: 2),
+                          ),
+                          TextSpan(
+                            text: lastFourNumbers,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    letterSpacing: 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Exp on - ',
+                        style: Theme.of(context).textTheme.headline4?.copyWith(
+                            fontWeight: FontWeight.w400, fontSize: 14),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: cardDetails.expDate.toString(),
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          IconButton(
-              onPressed: () =>
-                  controller.deleteCard(controller.cards[index].id!),
-              icon: FaIcon(
-                FontAwesomeIcons.trash,
-                color: Colors.white,
-                size: 20,
-              )),
-          Positioned(
-            bottom: 5,
-            right: 15,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                FaIcon(
-                  FontAwesomeIcons.ccMastercard,
-                  size: 50,
+            IconButton(
+                onPressed: () =>
+                    controller.deleteCard(controller.cards[index].id!),
+                icon: FaIcon(
+                  FontAwesomeIcons.trash,
                   color: Colors.white,
-                ),
-                Text(
-                  'american express',
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption
-                      ?.copyWith(fontWeight: FontWeight.w800, fontSize: 8),
-                )
-              ],
-            ),
-          )
-        ],
+                  size: 20,
+                )),
+            Positioned(
+              bottom: 5,
+              right: 15,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  FaIcon(
+                    cardDetails.cardManufacturer.contains('Visa')
+                        ? FontAwesomeIcons.ccVisa
+                        : cardDetails.cardManufacturer.contains('MasterCard')
+                            ? FontAwesomeIcons.ccMastercard
+                            : cardDetails.cardManufacturer.contains('RuPay')
+                                ? FontAwesomeIcons.moneyBillWaveAlt
+                                : FontAwesomeIcons.ccAmex,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  Text(
+                    cardDetails.cardManufacturer,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        ?.copyWith(fontWeight: FontWeight.w800, fontSize: 8),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

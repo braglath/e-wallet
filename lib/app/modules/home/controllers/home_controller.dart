@@ -1,3 +1,5 @@
+import 'package:e_wallet/app/data/storage/user_details_storage.dart';
+import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,12 +8,14 @@ import 'package:get/get.dart';
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
+import 'package:intl/intl.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
   late TabController tabController;
   final isDarkMode = false.obs;
   final isLoading = false.obs;
   final cards = <CardModel>[].obs;
+  final DateFormat format = DateFormat('MM/yyyy');
 
   final List<Tab> myTabs = <Tab>[
     Tab(
@@ -78,6 +82,4 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     cards.removeWhere((element) => element.id == id);
     isLoading.value = false;
   }
-
-
 }

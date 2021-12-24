@@ -83,8 +83,18 @@ class AddController extends GetxController {
       homeController.refreshCards();
       homeController.refresh();
       scrollToAddProductPage();
+      resetAddProductsDetails();
     });
     print(homeController.cards.length.toString());
+  }
+
+  void resetAddProductsDetails() {
+    nameController.clear();
+    numberController.clear();
+    formattedDate.value = format.format(DateTime.now());
+    cardtype.value = 'Pick card type';
+    cardManufacturer.value = 'Pick card manufacturer';
+    screenPickerColor.value = Color(0xffE45C3A);
   }
 
   void scrollToAddProductPage() {

@@ -1,3 +1,4 @@
+import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,10 @@ class AddView extends GetView<AddController> {
   }
 
   SingleChildScrollView _mainBody(BuildContext context) {
+    if (UserDetails().readUserNamefromBox().contains('')) {
+    } else {
+      controller.nameController.text = UserDetails().readUserNamefromBox();
+    }
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Form(
