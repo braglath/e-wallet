@@ -19,6 +19,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   final scrollController = ScrollController().obs;
   var shouldAutoscroll = false.obs;
   final DateFormat format = DateFormat('MM/yyyy');
+  DateTime timeBackButtonPressed = DateTime.now();
 
   final List<Tab> myTabs = <Tab>[
     Tab(
@@ -105,5 +106,21 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     CustomSnackbar(title: 'Success', message: 'Card removed successfully')
         .showSuccess();
     isLoading.value = false;
+  }
+
+  Future<bool> pressBackAgainToExit() async {
+    final difference = DateTime.now().difference(timeBackButtonPressed);
+    final isExitWarning = difference >= Duration(seconds: 2);
+    timeBackButtonPressed = DateTime.now();
+    if (isExitWarning) {
+      CustomSnackbar(
+              title: 'Exiting the app',
+              message: 'Press back button again to exit the app')
+          .showWarning();
+      return false;
+    } else {
+      Get.closeCurrentSnackbar();
+      return true;
+    }
   }
 }

@@ -25,67 +25,71 @@ class HomeView extends GetView<HomeController> {
   final moreController = Get.put<MoreController>(MoreController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: TopToBottomAnimationView(
-              duration: Duration(milliseconds: 800), child: Text('E-Wallet')),
-          titleTextStyle:
-              GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold),
-          centerTitle: true,
-          leading: Obx(() {
-            return IconButton(
-                splashRadius: 12,
-                onPressed: () => controller.themeSwitcher(),
-                icon: FaIcon(
-                  controller.isDarkMode.value
-                      ? FontAwesomeIcons.lightbulb
-                      : FontAwesomeIcons.moon,
-                  color: Colors.white,
-                  size: 18,
-                ));
-          }),
-          actions: <Widget>[_profileImage(context)],
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            indicatorWeight: 4,
-            labelStyle: GoogleFonts.roboto(fontSize: 15),
-            tabs: controller.myTabs,
-            controller: controller.tabController,
+    return WillPopScope(
+      onWillPop: () => controller.pressBackAgainToExit(),
+      child: Scaffold(
+          appBar: AppBar(
+            title: TopToBottomAnimationView(
+                duration: Duration(milliseconds: 800), child: Text('E-Wallet')),
+            titleTextStyle:
+                GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold),
+            centerTitle: true,
+            leading: Obx(() {
+              return IconButton(
+                  splashRadius: 12,
+                  onPressed: () => controller.themeSwitcher(),
+                  icon: FaIcon(
+                    controller.isDarkMode.value
+                        ? FontAwesomeIcons.lightbulb
+                        : FontAwesomeIcons.moon,
+                    color: Colors.white,
+                    size: 18,
+                  ));
+            }),
+            actions: <Widget>[_profileImage(context)],
+            bottom: TabBar(
+              indicatorColor: Colors.white,
+              indicatorWeight: 4,
+              labelStyle: GoogleFonts.roboto(fontSize: 15),
+              tabs: controller.myTabs,
+              controller: controller.tabController,
+            ),
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Obx(() {
-          return controller.shouldAutoscroll.value
-              ? FadedScaleAnimation(
-                  FloatingActionButton(
-                      heroTag: null,
-                      mini: true,
-                      tooltip: 'move to top',
-                      child: FaIcon(
-                        FontAwesomeIcons.chevronUp,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        controller.scrollToTop();
-                        print(controller.scrollController.value);
-                      }),
-                )
-              : SizedBox.shrink();
-        }),
-        // floatingActionButton: FloatingActionButton.extended(
-        //   // extendedPadding: EdgeInsets.symmetric(horizontal: 10),
-        //   // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        //   onPressed: () => controller.scrollToAddProductPage(),
-        //   label: Text(
-        //     'Add product',
-        //     style:
-        //         GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.bold),
-        //   ),
-        // ),
-        body: TabBarView(
-          controller: controller.tabController,
-          children: [_homeBody(), AddView(), MoreView()],
-        ));
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Obx(() {
+            return controller.shouldAutoscroll.value
+                ? FadedScaleAnimation(
+                    FloatingActionButton(
+                        heroTag: null,
+                        mini: true,
+                        tooltip: 'move to top',
+                        child: FaIcon(
+                          FontAwesomeIcons.chevronUp,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          controller.scrollToTop();
+                          print(controller.scrollController.value);
+                        }),
+                  )
+                : SizedBox.shrink();
+          }),
+          // floatingActionButton: FloatingActionButton.extended(
+          //   // extendedPadding: EdgeInsets.symmetric(horizontal: 10),
+          //   // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          //   onPressed: () => controller.scrollToAddProductPage(),
+          //   label: Text(
+          //     'Add product',
+          //     style:
+          //         GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.bold),
+          //   ),
+          // ),
+          body: TabBarView(
+            controller: controller.tabController,
+            children: [_homeBody(), AddView(), MoreView()],
+          )),
+    );
   }
 
   Widget _homeBody() => SafeArea(
