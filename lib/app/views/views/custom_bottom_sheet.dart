@@ -1,8 +1,10 @@
-import 'package:e_wallet/app/data/theme/theme_service.dart';
-import 'package:e_wallet/app/data/utils/color_resources.dart';
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+
+import 'package:e_wallet/app/data/theme/theme_service.dart';
+import 'package:e_wallet/app/data/utils/color_resources.dart';
 
 class CustomBottomSheet {
   IconData icon1;

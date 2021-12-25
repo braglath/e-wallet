@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ColorResourcesLight {
-  static const Color mainLIGHTColor = Color(0xff4CC0FA);
+  static const Color mainLIGHTColor = Color(0xffE8505B);
   static const Color mainLIGHTColor2 = Color.fromARGB(255, 85, 195, 250);
-  static const Color mainLIGHTScaffoldBG = Color(0xffAFE3FD);
-  static const Color mainLIGHTSplashColor = Color(0xffAFE3FD);
+  static const Color mainLIGHTScaffoldBG = Color.fromARGB(255, 255, 241, 242);
+  static const Color mainLIGHTSplashColor = Color.fromARGB(255, 255, 241, 242);
   static const Color mainTextHEADINGColor = Color(0xff333333);
   static const Color mainTextBODYColor = Color(0xff3D3D3D);
   static const Color mainTextSUBTITLEColor = Color(0xff474747);
-  static const Color mainLIGHTAPPBARcolor = Color(0xff4CC0FA);
+  static const Color mainLIGHTAPPBARcolor = Color(0xffE8505B);
 }
 
 class ColorResourcesDark {

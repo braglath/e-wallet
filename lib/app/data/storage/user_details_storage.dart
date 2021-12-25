@@ -11,12 +11,12 @@ class UserDetails {
   Future<void> saveUserNametoBox(String userName) =>
       _userNameBox.write(_userNamekey, userName);
 
-  saveUserProfilePictoBox(String userProfilePic) =>
+  Future<void> saveUserProfilePictoBox(String userProfilePic) =>
       _userProfilePicBox.write(_userProfilePickey, userProfilePic);
 
   // ? read user details
 
-  String readUserNamefromBox() => _userNameBox.read(_userNamekey);
+  String readUserNamefromBox() => _userNameBox.read(_userNamekey) ?? '';
   String readUserProfilePicfromBox() =>
-      _userProfilePicBox.read(_userProfilePickey);
+      _userProfilePicBox.read(_userProfilePickey) ?? '';
 }

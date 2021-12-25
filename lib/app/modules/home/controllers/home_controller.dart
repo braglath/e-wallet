@@ -1,20 +1,23 @@
-import 'package:e_wallet/app/data/storage/user_details_storage.dart';
-import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
+import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
-import 'package:intl/intl.dart';
+import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
+import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
   late TabController tabController;
   final isDarkMode = false.obs;
   final isLoading = false.obs;
   final cards = <CardModel>[].obs;
+  final scrollController = ScrollController().obs;
+  var shouldAutoscroll = false.obs;
   final DateFormat format = DateFormat('MM/yyyy');
 
   final List<Tab> myTabs = <Tab>[
@@ -36,6 +39,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   @override
   void onInit() {
     tabController = TabController(length: 3, vsync: this);
+    scrollController.value.addListener(_scrollListener);
+    // print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
     super.onInit();
   }
 
@@ -47,7 +52,23 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   @override
   void onClose() {
     tabController.dispose();
+    scrollController.value.removeListener(_scrollListener);
     super.onClose();
+  }
+
+  void _scrollListener() {
+    if (scrollController.value.hasClients &&
+        scrollController.value.position.pixels >= 150) {
+      shouldAutoscroll.value = true;
+    } else {
+      shouldAutoscroll.value = false;
+    }
+  }
+
+  void scrollToTop() {
+    final double start = 0;
+    scrollController.value.animateTo(start,
+        duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
   }
 
   void increment() => count.value++;
@@ -61,9 +82,9 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  void scrollToAddProductPage() {
+  void scrollToAddProductPage(int i) {
     tabController.animateTo(
-      1,
+      i,
       duration: Duration(milliseconds: 500),
     );
   }
@@ -80,6 +101,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     isLoading.value = true;
     await CardDatabase.instance.delete(id);
     cards.removeWhere((element) => element.id == id);
+    CustomSnackbar(title: 'Success', message: 'Card removed successfully')
+        .showSuccess();
     isLoading.value = false;
   }
 }

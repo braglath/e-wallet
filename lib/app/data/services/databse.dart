@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+
 import 'package:e_wallet/app/data/model/card_model.dart';
 
 class CardDatabase {

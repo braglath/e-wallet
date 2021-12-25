@@ -1,6 +1,8 @@
-import 'package:e_wallet/app/data/utils/color_resources.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
+
+import 'package:e_wallet/app/data/utils/color_resources.dart';
 
 class CustomSnackbar {
   String title;
@@ -16,7 +18,7 @@ class CustomSnackbar {
           backgroundColor: ColorResourcesLight.mainLIGHTColor,
           child: Icon(
             Icons.warning_sharp,
-            color: ColorResourcesLight.mainLIGHTAPPBARcolor,
+            color: Colors.white,
             size: 25,
           ),
         ),
@@ -45,7 +47,7 @@ class CustomSnackbar {
           backgroundColor: ColorResourcesLight.mainLIGHTColor,
           child: Icon(
             Icons.done,
-            color: ColorResourcesLight.mainLIGHTAPPBARcolor,
+            color: Colors.white,
             size: 35,
           ),
         ),

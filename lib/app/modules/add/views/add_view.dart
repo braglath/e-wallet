@@ -1,13 +1,13 @@
-import 'package:e_wallet/app/data/storage/user_details_storage.dart';
-import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
+import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
+import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 
 import '../controllers/add_controller.dart';
 
@@ -42,10 +42,11 @@ class AddView extends GetView<AddController> {
   }
 
   SingleChildScrollView _mainBody(BuildContext context) {
-    if (UserDetails().readUserNamefromBox().contains('')) {
-    } else {
-      controller.nameController.text = UserDetails().readUserNamefromBox();
-    }
+    controller.nameController.text =
+        UserDetails().readUserNamefromBox().contains('')
+            ? UserDetails().readUserNamefromBox()
+            : 'Name';
+
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Form(
@@ -72,6 +73,13 @@ class AddView extends GetView<AddController> {
   Widget _name() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
+            cursorColor: ThemeService().theme == ThemeMode.light
+                ? ColorResourcesLight.mainLIGHTColor
+                : Colors.white,
+            style: TextStyle(
+                color: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : Colors.white),
             controller: controller.nameController,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
@@ -83,6 +91,13 @@ class AddView extends GetView<AddController> {
   Widget _cardNumber() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
+            cursorColor: ThemeService().theme == ThemeMode.light
+                ? ColorResourcesLight.mainLIGHTColor
+                : Colors.white,
+            style: TextStyle(
+                color: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : Colors.white),
             controller: controller.numberController,
             maxLength: 16,
             keyboardType: TextInputType.number,
@@ -115,7 +130,11 @@ class AddView extends GetView<AddController> {
           controller.formattedDate.value.isEmpty
               ? 'MM/YYYY'
               : controller.formattedDate.value.toString(),
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: 20,
+              color: ThemeService().theme == ThemeMode.light
+                  ? ColorResourcesLight.mainLIGHTColor
+                  : Colors.white),
         ),
         ElevatedButton(
             onPressed: () => controller.selectDate(context),
@@ -145,6 +164,9 @@ class AddView extends GetView<AddController> {
           isExpanded: true,
           value: controller.cardtype.toString(),
           icon: const Icon(Icons.arrow_downward_rounded),
+          dropdownColor: ThemeService().theme == ThemeMode.light
+              ? ColorResourcesLight.mainLIGHTColor
+              : ColorResourcesDark.mainDARKColor,
           iconSize: 20,
           elevation: 16,
           underline: Container(),
@@ -193,6 +215,9 @@ class AddView extends GetView<AddController> {
     return Obx(
       () {
         return DropdownButton<String>(
+          dropdownColor: ThemeService().theme == ThemeMode.light
+              ? ColorResourcesLight.mainLIGHTColor
+              : ColorResourcesDark.mainDARKColor,
           isExpanded: true,
           value: controller.cardManufacturer.toString(),
           icon: const Icon(Icons.arrow_downward_rounded),
@@ -260,6 +285,9 @@ class AddView extends GetView<AddController> {
                 height: 5,
               ),
               Card(
+                color: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : ColorResourcesDark.mainDARKColor,
                 elevation: 4,
                 child: ColorPicker(
                   pickersEnabled: {

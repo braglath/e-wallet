@@ -1,4 +1,3 @@
-import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,9 @@ import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
+import 'package:e_wallet/app/data/utils/color_resources.dart';
+import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
+import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 
 class AddController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -18,7 +20,7 @@ class AddController extends GetxController {
   final formattedDate = ''.obs;
   final cardtype = 'Pick card type'.obs;
   final cardManufacturer = 'Pick card manufacturer'.obs;
-  final screenPickerColor = Color(0xffE45C3A).obs;
+  final screenPickerColor = ColorResourcesLight.mainLIGHTColor.obs;
 
   final count = 0.obs;
 
@@ -82,6 +84,8 @@ class AddController extends GetxController {
     await CardDatabase.instance.create(card).whenComplete(() {
       homeController.refreshCards();
       homeController.refresh();
+      CustomSnackbar(title: 'Success', message: 'Card added successfully')
+          .showSuccess();
       scrollToAddProductPage();
       resetAddProductsDetails();
     });

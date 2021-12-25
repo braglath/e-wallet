@@ -1,14 +1,21 @@
-import 'package:e_wallet/app/data/model/card_model.dart';
-import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:e_wallet/app/data/model/card_model.dart';
+import 'package:e_wallet/app/data/storage/user_details_storage.dart';
+import 'package:e_wallet/app/data/theme/theme_service.dart';
+import 'package:e_wallet/app/data/utils/color_resources.dart';
 import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
 import 'package:e_wallet/app/modules/add/views/add_view.dart';
 import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:e_wallet/app/modules/more/controllers/more_controller.dart';
 import 'package:e_wallet/app/modules/more/views/more_view.dart';
+import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
 import 'package:e_wallet/app/views/views/top_to_bottom_animation_view.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -30,14 +37,13 @@ class HomeView extends GetView<HomeController> {
                 onPressed: () => controller.themeSwitcher(),
                 icon: FaIcon(
                   controller.isDarkMode.value
-                      ? FontAwesomeIcons.moon
-                      : FontAwesomeIcons.lightbulb,
-                  color:
-                      controller.isDarkMode.value ? Colors.white : Colors.amber,
+                      ? FontAwesomeIcons.lightbulb
+                      : FontAwesomeIcons.moon,
+                  color: Colors.white,
                   size: 18,
                 ));
           }),
-          actions: <Widget>[],
+          actions: <Widget>[_profileImage(context)],
           bottom: TabBar(
             indicatorColor: Colors.white,
             indicatorWeight: 4,
@@ -46,6 +52,25 @@ class HomeView extends GetView<HomeController> {
             controller: controller.tabController,
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Obx(() {
+          return controller.shouldAutoscroll.value
+              ? FadedScaleAnimation(
+                  FloatingActionButton(
+                      heroTag: null,
+                      mini: true,
+                      tooltip: 'move to top',
+                      child: FaIcon(
+                        FontAwesomeIcons.chevronUp,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        controller.scrollToTop();
+                        print(controller.scrollController.value);
+                      }),
+                )
+              : SizedBox.shrink();
+        }),
         // floatingActionButton: FloatingActionButton.extended(
         //   // extendedPadding: EdgeInsets.symmetric(horizontal: 10),
         //   // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -84,7 +109,7 @@ class HomeView extends GetView<HomeController> {
                   }),
               controller.cards.isEmpty
                   ? ElevatedButton(
-                      onPressed: () => controller.scrollToAddProductPage(),
+                      onPressed: () => controller.scrollToAddProductPage(1),
                       child: Text(
                         'Add product',
                         style: GoogleFonts.roboto(
@@ -156,7 +181,16 @@ class HomeView extends GetView<HomeController> {
                             fontWeight: FontWeight.w300, letterSpacing: 2),
                         children: <TextSpan>[
                           TextSpan(
-                            text: '********',
+                            text: ' **** ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    letterSpacing: 2),
+                          ),
+                          TextSpan(
+                            text: ' **** ',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline3
@@ -232,5 +266,51 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
     );
+  }
+
+  Widget _profileImage(BuildContext context) {
+    // print('user profile pic ${UserDetails().readUserProfilePicfromBox()}');
+
+    return Obx(() {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: InkWell(
+          radius: 15,
+          borderRadius: BorderRadius.circular(50),
+          onTap: () => controller.scrollToAddProductPage(2),
+          child: Hero(
+            tag: 'profileicon',
+            child: Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 14,
+                child: CircleAvatar(
+                  radius: 12,
+                  child: UserDetails().readUserProfilePicfromBox().isEmpty
+                      ? Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 18,
+                        )
+                      : null,
+                  backgroundColor: ThemeService().theme == ThemeMode.light
+                      ? ColorResourcesLight.mainLIGHTColor
+                      : ColorResourcesDark.mainDARKColor,
+                  foregroundImage: moreController.profilePicture.value.isEmpty
+                      ? UserDetails().readUserProfilePicfromBox().isEmpty
+                          ? null
+                          : FileImage(
+                              File(UserDetails().readUserProfilePicfromBox()),
+                            )
+                      : FileImage(
+                          File(moreController.profilePicture.value),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

@@ -1,10 +1,13 @@
-import 'package:e_wallet/app/data/storage/user_details_storage.dart';
-import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+import 'package:e_wallet/app/data/storage/user_details_storage.dart';
+import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
+import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 
 class MoreController extends GetxController {
   final count = 0.obs;
@@ -12,6 +15,7 @@ class MoreController extends GetxController {
   final isLoading = false.obs;
   final profilePicture = ''.obs;
   final editName = false.obs;
+  final name = ''.obs;
   XFile? photo;
   final TextEditingController nameController = TextEditingController();
   final GlobalKey<FormState> profileNameKey = GlobalKey<FormState>();
@@ -20,6 +24,7 @@ class MoreController extends GetxController {
   void onInit() {
     super.onInit();
     initPackageInfo();
+    print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
   }
 
   @override
@@ -31,8 +36,9 @@ class MoreController extends GetxController {
   void onClose() {}
   void increment() => count.value++;
 
-  void editNameField() {
-    editName.value = !editName.value;
+  void editNameField(bool? checkboxState) {
+    editName.value = checkboxState ?? true;
+    print(editName.value);
   }
 
   String? nameValidator(String? value) {
@@ -45,7 +51,9 @@ class MoreController extends GetxController {
   void saveName() {
     if (profileNameKey.currentState!.validate()) {
       print(nameController.text);
+      name.value = nameController.text;
       UserDetails().saveUserNametoBox(nameController.text);
+      nameController.clear();
     }
   }
 
@@ -73,6 +81,8 @@ class MoreController extends GetxController {
           final String profilePic = photo!.path;
           UserDetails().saveUserProfilePictoBox(profilePic);
           profilePicture.value = profilePic;
+
+          print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
           Get.back();
         } else {
           CustomSnackbar(title: 'Warning', message: 'Failed to pick image')

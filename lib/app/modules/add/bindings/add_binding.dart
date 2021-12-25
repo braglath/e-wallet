@@ -8,6 +8,5 @@ class AddBinding extends Bindings {
     Get.lazyPut<AddController>(
       () => AddController(),
     );
-    
   }
 }
