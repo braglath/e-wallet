@@ -101,7 +101,7 @@ class CardDatabase {
       tableCards,
       where: '${CardFields.id} = ?',
       whereArgs: [id],
-    );
+    ).whenComplete(() => print('card removed'));
   }
 
   Future close() async {

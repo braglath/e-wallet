@@ -101,6 +101,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     isLoading.value = true;
     await CardDatabase.instance.delete(id);
     cards.removeWhere((element) => element.id == id);
+    Get.back();
     CustomSnackbar(title: 'Success', message: 'Card removed successfully')
         .showSuccess();
     isLoading.value = false;

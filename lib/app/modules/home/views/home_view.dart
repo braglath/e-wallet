@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:e_wallet/app/views/views/custom_dialogue.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -228,8 +229,23 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             IconButton(
-                onPressed: () =>
-                    controller.deleteCard(controller.cards[index].id!),
+                onPressed: () => CustomDialogue(
+                      title: 'Remove card?',
+                      textConfirm: 'Confim',
+                      textCancel: 'Cancel',
+                      onpressedConfirm: () =>
+                          controller.deleteCard(controller.cards[index].id!),
+                      onpressedCancel: () => Get.back(),
+                      contentWidget: Text(
+                        'You are about to remove this card.\nThis cannot be undone',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      isDismissible: true,
+                    ).showDialogue(),
                 icon: FaIcon(
                   FontAwesomeIcons.trash,
                   color: Colors.white,
