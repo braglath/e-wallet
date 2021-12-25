@@ -41,6 +41,30 @@ class AddController extends GetxController {
   void onClose() {}
   void increment() => count.value++;
 
+  String? nameValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Name cannot be empty';
+    }
+    if (RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(value)) {
+      return 'Cannot have special characters or numbers';
+    }
+    return null;
+  }
+
+  String? cardValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Card number cannot be empty';
+    }
+    if (RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Only numbers are accepted here';
+    }
+
+    if (value.length < 16) {
+      return 'Cannot be less than 16 characters';
+    }
+    return null;
+  }
+
   Future<void> selectDate(BuildContext context) async {
     showMonthPicker(
       context: context,
@@ -71,25 +95,34 @@ class AddController extends GetxController {
   }
 
   Future addCard() async {
-    print(
-        'Name - ${nameController.text}\nCard number - ${numberController.text}\nExp date - ${formattedDate.value}\nType - ${cardtype.value}\nManufacturer - ${cardManufacturer.value}\nCard color - ${screenPickerColor.value}');
-    final card = CardModel(
-        name: nameController.text,
-        number: int.parse(numberController.text),
-        expDate: formattedDate.value.toString(),
-        cardType: cardtype.value,
-        cardManufacturer: cardManufacturer.value,
-        cardColor: screenPickerColor.value.toString());
+    if (formKey.currentState!.validate()) {
+      if (formattedDate.value.contains(format.format(DateTime.now())) ||
+          cardtype.value.contains('Pick card type') ||
+          cardManufacturer.value.contains('Pick card manufacturer')) {
+        CustomSnackbar(title: 'Warning', message: 'Enter all card details')
+            .showWarning();
+      } else {
+        print(
+            'Name - ${nameController.text}\nCard number - ${numberController.text}\nExp date - ${formattedDate.value}\nType - ${cardtype.value}\nManufacturer - ${cardManufacturer.value}\nCard color - ${screenPickerColor.value}');
+        final card = CardModel(
+            name: nameController.text,
+            number: int.parse(numberController.text),
+            expDate: formattedDate.value.toString(),
+            cardType: cardtype.value,
+            cardManufacturer: cardManufacturer.value,
+            cardColor: screenPickerColor.value.toString());
 
-    await CardDatabase.instance.create(card).whenComplete(() {
-      homeController.refreshCards();
-      homeController.refresh();
-      CustomSnackbar(title: 'Success', message: 'Card added successfully')
-          .showSuccess();
-      scrollToAddProductPage();
-      resetAddProductsDetails();
-    });
-    print(homeController.cards.length.toString());
+        await CardDatabase.instance.create(card).whenComplete(() {
+          homeController.refreshCards();
+          homeController.refresh();
+          CustomSnackbar(title: 'Success', message: 'Card added successfully')
+              .showSuccess();
+          scrollToAddProductPage();
+          resetAddProductsDetails();
+        });
+        print(homeController.cards.length.toString());
+      }
+    }
   }
 
   void resetAddProductsDetails() {

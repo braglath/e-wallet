@@ -60,7 +60,7 @@ class Themes {
           fontSize: 20),
       fillColor: ColorResourcesLight.mainLIGHTAPPBARcolor,
       errorStyle: const TextStyle().copyWith(
-          color: ColorResourcesLight.mainTextHEADINGColor,
+          color: ColorResourcesLight.mainLIGHTColor,
           fontWeight: FontWeight.bold,
           fontSize: 17),
       focusedBorder: OutlineInputBorder(
@@ -72,6 +72,13 @@ class Themes {
         borderRadius: BorderRadius.circular(8.0),
         borderSide: const BorderSide(
           color: Colors.white,
+          width: 2.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(
+          color: Colors.red,
           width: 2.0,
         ),
       ),
@@ -163,15 +170,20 @@ class Themes {
           fontSize: 20),
       fillColor: ColorResourcesDark.mainDARKAPPBARcolor,
       errorStyle: const TextStyle().copyWith(
-          color: ColorResourcesLight.mainTextHEADINGColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 17),
+          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide:
             BorderSide(width: 2, color: ColorResourcesDark.mainDARKColor),
       ),
       enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(
+          color: Colors.white,
+          width: 2.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: const BorderSide(
           color: Colors.white,

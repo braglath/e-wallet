@@ -73,6 +73,7 @@ class AddView extends GetView<AddController> {
   Widget _name() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
+            validator: (value) => controller.nameValidator(value),
             cursorColor: ThemeService().theme == ThemeMode.light
                 ? ColorResourcesLight.mainLIGHTColor
                 : Colors.white,
@@ -91,6 +92,7 @@ class AddView extends GetView<AddController> {
   Widget _cardNumber() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
+            validator: (value) => controller.cardValidator(value),
             cursorColor: ThemeService().theme == ThemeMode.light
                 ? ColorResourcesLight.mainLIGHTColor
                 : Colors.white,
