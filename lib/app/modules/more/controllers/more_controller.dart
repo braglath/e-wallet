@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
-import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 
 class MoreController extends GetxController {

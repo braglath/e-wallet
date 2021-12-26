@@ -55,8 +55,6 @@ class HomeView extends GetView<HomeController> {
               controller: controller.tabController,
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
           floatingActionButton: Obx(() {
             return controller.shouldAutoscroll.value
                 ? FadedScaleAnimation(
@@ -73,7 +71,22 @@ class HomeView extends GetView<HomeController> {
                           print(controller.scrollController.value);
                         }),
                   )
-                : SizedBox.shrink();
+                : controller.cards.length > 3
+                    ? FadedScaleAnimation(
+                        FloatingActionButton(
+                            heroTag: null,
+                            mini: true,
+                            tooltip: 'move to top',
+                            child: FaIcon(
+                              FontAwesomeIcons.chevronDown,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              controller.scrollToBottomm();
+                              print(controller.scrollController.value);
+                            }),
+                      )
+                    : SizedBox.shrink();
           }),
           // floatingActionButton: FloatingActionButton.extended(
           //   // extendedPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -102,6 +115,7 @@ class HomeView extends GetView<HomeController> {
                   builder: (context, snapshot) {
                     return Scrollbar(
                       child: ListView.builder(
+                          controller: controller.scrollController.value,
                           physics: BouncingScrollPhysics(),
                           itemCount: controller.cards.length,
                           itemBuilder: (context, index) {
@@ -113,13 +127,30 @@ class HomeView extends GetView<HomeController> {
                     );
                   }),
               controller.cards.isEmpty
-                  ? ElevatedButton(
-                      onPressed: () => controller.scrollToAddProductPage(1),
-                      child: Text(
-                        'Add product',
-                        style: GoogleFonts.roboto(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "You havn't added any card yet",
+                          style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ThemeService().theme == ThemeMode.light
+                                  ? ColorResourcesLight.mainLIGHTColor
+                                  : Colors.white),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        ElevatedButton(
+                          onPressed: () => controller.scrollToAddProductPage(1),
+                          child: Text(
+                            'Add card',
+                            style: GoogleFonts.roboto(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     )
                   : SizedBox.shrink()
             ],
@@ -258,28 +289,16 @@ class HomeView extends GetView<HomeController> {
             Positioned(
               bottom: 5,
               right: 15,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  FaIcon(
-                    cardDetails.cardManufacturer.contains('Visa')
-                        ? FontAwesomeIcons.ccVisa
-                        : cardDetails.cardManufacturer.contains('MasterCard')
-                            ? FontAwesomeIcons.ccMastercard
-                            : cardDetails.cardManufacturer.contains('RuPay')
-                                ? FontAwesomeIcons.moneyBillWaveAlt
-                                : FontAwesomeIcons.ccAmex,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    cardDetails.cardManufacturer,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        ?.copyWith(fontWeight: FontWeight.w800, fontSize: 8),
-                  )
-                ],
+              child: FaIcon(
+                cardDetails.cardManufacturer.contains('Visa')
+                    ? FontAwesomeIcons.ccVisa
+                    : cardDetails.cardManufacturer.contains('MasterCard')
+                        ? FontAwesomeIcons.ccMastercard
+                        : cardDetails.cardManufacturer.contains('RuPay')
+                            ? FontAwesomeIcons.moneyBillWaveAlt
+                            : FontAwesomeIcons.ccAmex,
+                size: 50,
+                color: Colors.white,
               ),
             )
           ],

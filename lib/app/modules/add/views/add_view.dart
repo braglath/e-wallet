@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
-import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
-
 import '../controllers/add_controller.dart';
 
 class AddView extends GetView<AddController> {
@@ -314,13 +310,13 @@ class AddView extends GetView<AddController> {
   _addCardButton(context) => ElevatedButton(
       onPressed: () => controller.addCard(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 2),
         child: Text(
           'Add Card',
           style: Theme.of(context)
               .textTheme
-              .headline4
-              ?.copyWith(color: Colors.white),
+              .headline3
+              ?.copyWith(color: Colors.white, fontSize: 22),
         ),
       ));
 }

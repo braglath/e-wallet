@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
-import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
-import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
 import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
@@ -61,6 +57,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     if (scrollController.value.hasClients &&
         scrollController.value.position.pixels >= 150) {
       shouldAutoscroll.value = true;
+      print(
+          'scrollController value - ${scrollController.value.position.pixels}');
     } else {
       shouldAutoscroll.value = false;
     }
@@ -70,6 +68,15 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final double start = 0;
     scrollController.value.animateTo(start,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+    print(scrollController.value);
+  }
+
+  void scrollToBottomm() {
+    scrollController.value.animateTo(
+        scrollController.value.position.maxScrollExtent,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.fastOutSlowIn);
+    print(scrollController.value);
   }
 
   void increment() => count.value++;
