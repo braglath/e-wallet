@@ -1,12 +1,9 @@
 import 'dart:io';
-
 import 'package:e_wallet/app/views/views/custom_dialogue.dart';
 import 'package:flutter/material.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
@@ -61,7 +58,7 @@ class HomeView extends GetView<HomeController> {
                     FloatingActionButton(
                         heroTag: null,
                         mini: true,
-                        tooltip: 'move to top',
+                        tooltip: 'scroll to top',
                         child: FaIcon(
                           FontAwesomeIcons.chevronUp,
                           color: Colors.white,
@@ -71,12 +68,13 @@ class HomeView extends GetView<HomeController> {
                           print(controller.scrollController.value);
                         }),
                   )
-                : controller.cards.length > 3
+                : controller.cards.length > 3 &&
+                        controller.tabController.index == 0
                     ? FadedScaleAnimation(
                         FloatingActionButton(
                             heroTag: null,
                             mini: true,
-                            tooltip: 'move to top',
+                            tooltip: 'scroll to bottom',
                             child: FaIcon(
                               FontAwesomeIcons.chevronDown,
                               color: Colors.white,

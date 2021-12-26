@@ -1,18 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
 import 'package:e_wallet/app/views/views/custom_bottom_sheet.dart';
 import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
-
 import '../controllers/more_controller.dart';
 
 class MoreView extends GetView<MoreController> {

@@ -24,10 +24,6 @@ class MoreController extends GetxController {
     print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}
