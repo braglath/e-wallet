@@ -128,7 +128,7 @@ class AddView extends GetView<AddController> {
           controller.formattedDate.value.isEmpty
               ? 'MM/YYYY'
               : controller.formattedDate.value.toString(),
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          style: Theme.of(context).textTheme.headline5?.copyWith(
               fontSize: 20,
               color: ThemeService().theme == ThemeMode.light
                   ? ColorResourcesLight.mainLIGHTColor
