@@ -68,19 +68,19 @@ class AddController extends GetxController {
       if (date != null) {
         currentDate.value = date;
         formattedDate.value = format.format(currentDate.value);
-        print('formatted date - ${formattedDate.value}');
+        // print('formatted date - ${formattedDate.value}');
       }
     });
   }
 
   void setCardType(String? newvalue) {
     cardtype.value = RxString(newvalue.toString()).toString();
-    print('selected card type - ${cardtype.value}');
+    // print('selected card type - ${cardtype.value}');
   }
 
   void setCardManufacturer(String? newvalue) {
     cardManufacturer.value = RxString(newvalue.toString()).toString();
-    print('selected card type - ${cardManufacturer.value}');
+    // print('selected card type - ${cardManufacturer.value}');
   }
 
   void colorPicker(Color color) {
@@ -95,8 +95,8 @@ class AddController extends GetxController {
         CustomSnackbar(title: 'Warning', message: 'Enter all card details')
             .showWarning();
       } else {
-        print(
-            'Name - ${nameController.text}\nCard number - ${numberController.text}\nExp date - ${formattedDate.value}\nType - ${cardtype.value}\nManufacturer - ${cardManufacturer.value}\nCard color - ${screenPickerColor.value}');
+        // print(
+        //     'Name - ${nameController.text}\nCard number - ${numberController.text}\nExp date - ${formattedDate.value}\nType - ${cardtype.value}\nManufacturer - ${cardManufacturer.value}\nCard color - ${screenPickerColor.value}');
         final card = CardModel(
             name: nameController.text,
             number: int.parse(numberController.text),
@@ -113,7 +113,7 @@ class AddController extends GetxController {
           scrollToAddProductPage();
           resetAddProductsDetails();
         });
-        print(homeController.cards.length.toString());
+        // print(homeController.cards.length.toString());
       }
     }
   }

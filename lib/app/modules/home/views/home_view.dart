@@ -53,7 +53,8 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           floatingActionButton: Obx(() {
-            return controller.shouldAutoscroll.value
+            return controller.shouldAutoscroll.value &&
+                    controller.tabController.index == 0
                 ? FadedScaleAnimation(
                     FloatingActionButton(
                         heroTag: null,
@@ -65,11 +66,11 @@ class HomeView extends GetView<HomeController> {
                         ),
                         onPressed: () {
                           controller.scrollToTop();
-                          print(controller.scrollController.value);
+                          // print(controller.scrollController.value);
                         }),
                   )
                 : controller.cards.length > 3 &&
-                        controller.tabController.index == 0
+                        controller.tabController.index == 0 
                     ? FadedScaleAnimation(
                         FloatingActionButton(
                             heroTag: null,
@@ -81,7 +82,7 @@ class HomeView extends GetView<HomeController> {
                             ),
                             onPressed: () {
                               controller.scrollToBottomm();
-                              print(controller.scrollController.value);
+                              // print(controller.scrollController.value);
                             }),
                       )
                     : SizedBox.shrink();
@@ -118,8 +119,8 @@ class HomeView extends GetView<HomeController> {
                           itemCount: controller.cards.length,
                           itemBuilder: (context, index) {
                             final cardDetails = controller.cards[index];
-                            print(index);
-                            print('${controller.cards[index].id}');
+                            // print(index);
+                            // print('${controller.cards[index].id}');
                             return cardsMain(context, cardDetails, index);
                           }),
                     );
@@ -157,11 +158,11 @@ class HomeView extends GetView<HomeController> {
       );
 
   Widget cardsMain(BuildContext context, CardModel cardDetails, int index) {
-    print('card color - ${cardDetails.cardColor}');
+    // print('card color - ${cardDetails.cardColor}');
     String removeColortext = cardDetails.cardColor.replaceAll('Color', '');
     String removeBracketLeft = removeColortext.replaceAll('(', '');
     String cardColor = removeBracketLeft.replaceAll(')', '');
-    print(cardColor);
+    // print(cardColor);
     String cardNumber = cardDetails.number.toString();
     String firstFourNumbers = cardNumber.substring(0, 4);
     String lastFourNumbers = cardNumber.substring(12);

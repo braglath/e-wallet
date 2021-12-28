@@ -40,7 +40,7 @@ class CardDatabase {
       ${CardFields.cardColor} $stringType
     )
     ''');
-    print('database created');
+    // print('database created');
   }
 
   Future<CardModel> create(CardModel cardModel) async {
@@ -101,7 +101,7 @@ class CardDatabase {
       tableCards,
       where: '${CardFields.id} = ?',
       whereArgs: [id],
-    ).whenComplete(() => print('card removed'));
+    );
   }
 
   Future close() async {

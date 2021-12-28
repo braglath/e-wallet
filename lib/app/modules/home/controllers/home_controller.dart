@@ -41,7 +41,6 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     super.onInit();
   }
 
-
   @override
   void onClose() {
     tabController.dispose();
@@ -53,8 +52,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     if (scrollController.value.hasClients &&
         scrollController.value.position.pixels >= 150) {
       shouldAutoscroll.value = true;
-      print(
-          'scrollController value - ${scrollController.value.position.pixels}');
+      // print(
+      //     'scrollController value - ${scrollController.value.position.pixels}');
     } else {
       shouldAutoscroll.value = false;
     }
@@ -64,7 +63,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final double start = 0;
     scrollController.value.animateTo(start,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-    print(scrollController.value);
+    // print(scrollController.value);
   }
 
   void scrollToBottomm() {
@@ -72,7 +71,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
         scrollController.value.position.maxScrollExtent,
         duration: Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn);
-    print(scrollController.value);
+    // print(scrollController.value);
   }
 
   void increment() => count.value++;
@@ -101,7 +100,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future deleteCard(int id) async {
-    print(id);
+    // print(id);
     isLoading.value = true;
     await CardDatabase.instance.delete(id);
     cards.removeWhere((element) => element.id == id);

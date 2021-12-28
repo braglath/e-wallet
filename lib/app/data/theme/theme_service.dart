@@ -21,9 +21,9 @@ class ThemeService {
     Get.changeThemeMode(_loadThemeFromBox() ? ThemeMode.light : ThemeMode.dark);
     saveThemeToBox(!_loadThemeFromBox());
     if (ThemeService().theme == ThemeMode.light) {
-      print('light theme');
+      // print('light theme');
     } else {
-      print('dark theme');
+      // print('dark theme');
     }
   }
 }

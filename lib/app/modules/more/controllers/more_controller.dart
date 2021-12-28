@@ -21,9 +21,8 @@ class MoreController extends GetxController {
   void onInit() {
     super.onInit();
     initPackageInfo();
-    print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
+    // print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
   }
-
 
   @override
   void onClose() {}
@@ -31,7 +30,7 @@ class MoreController extends GetxController {
 
   void editNameField(bool? checkboxState) {
     editName.value = checkboxState ?? true;
-    print(editName.value);
+    // print(editName.value);
   }
 
   String? nameValidator(String? value) {
@@ -43,7 +42,7 @@ class MoreController extends GetxController {
 
   void saveName() {
     if (profileNameKey.currentState!.validate()) {
-      print(nameController.text);
+      // print(nameController.text);
       name.value = nameController.text;
       UserDetails().saveUserNametoBox(nameController.text);
       nameController.clear();
@@ -54,7 +53,7 @@ class MoreController extends GetxController {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final String version = packageInfo.version;
     appVersion.value = version;
-    print('app version - $version');
+    // print('app version - $version');
   }
 
   Future pickImage(ImageSource source) async {
@@ -70,12 +69,12 @@ class MoreController extends GetxController {
         photo = XFile(photo!.path);
         if (photo != null) {
           //? photo with file path
-          print('photo file page - ${photo!.path}');
+          // print('photo file page - ${photo!.path}');
           final String profilePic = photo!.path;
           UserDetails().saveUserProfilePictoBox(profilePic);
           profilePicture.value = profilePic;
 
-          print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
+          // print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
           Get.back();
         } else {
           CustomSnackbar(title: 'Warning', message: 'Failed to pick image')
@@ -89,9 +88,9 @@ class MoreController extends GetxController {
       Get.back();
       isLoading.value = false;
 
-      CustomSnackbar(title: 'Warning', message: 'Failed to pick image')
+      CustomSnackbar(title: 'Warning', message: 'Failed to pick image, $e')
           .showWarning();
-      print('Failed to pick image: $e');
+      // print('Failed to pick image: $e');
     }
   }
 }
