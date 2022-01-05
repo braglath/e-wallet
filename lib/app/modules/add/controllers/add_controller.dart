@@ -1,3 +1,4 @@
+import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class AddController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
+  final TextEditingController cvvController = TextEditingController();
   final currentDate = DateTime.now().obs;
   final DateFormat format = DateFormat('MM/yyyy');
   final formattedDate = ''.obs;
@@ -22,13 +24,11 @@ class AddController extends GetxController {
   final cardManufacturer = 'Pick card manufacturer'.obs;
   final screenPickerColor = ColorResourcesLight.mainLIGHTColor.obs;
 
+
   final count = 0.obs;
 
   @override
   final homeController = Get.put<HomeController>(HomeController());
-
-
-
 
   @override
   void onClose() {}
@@ -54,6 +54,20 @@ class AddController extends GetxController {
 
     if (value.length < 16) {
       return 'Cannot be less than 16 characters';
+    }
+    return null;
+  }
+
+  String? cvvValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Card number cannot be empty';
+    }
+    if (RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Only numbers are accepted here';
+    }
+
+    if (value.length < 3) {
+      return 'Cannot be less than 3 characters';
     }
     return null;
   }
@@ -101,6 +115,7 @@ class AddController extends GetxController {
             name: nameController.text,
             number: int.parse(numberController.text),
             expDate: formattedDate.value.toString(),
+            cvvNumber: int.parse(cvvController.text),
             cardType: cardtype.value,
             cardManufacturer: cardManufacturer.value,
             cardColor: screenPickerColor.value.toString());
@@ -122,6 +137,7 @@ class AddController extends GetxController {
     nameController.clear();
     numberController.clear();
     formattedDate.value = format.format(DateTime.now());
+    cvvController.clear();
     cardtype.value = 'Pick card type';
     cardManufacturer.value = 'Pick card manufacturer';
     screenPickerColor.value = Color(0xffE45C3A);
@@ -133,4 +149,6 @@ class AddController extends GetxController {
       duration: Duration(milliseconds: 500),
     );
   }
+
+
 }

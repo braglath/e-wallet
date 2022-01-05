@@ -6,6 +6,7 @@ class CardFields {
     name,
     number,
     expDate,
+    cvvNumber,
     cardType,
     cardManufacturer,
     cardColor
@@ -15,6 +16,7 @@ class CardFields {
   static final String name = 'name';
   static final String number = 'number';
   static final String expDate = 'expDate';
+  static final String cvvNumber = 'cvvNumber';
   static final String cardType = 'cardType';
   static final String cardManufacturer = 'cardManufacturer';
   static final String cardColor = 'cardColor';
@@ -25,6 +27,7 @@ class CardModel {
   final String name;
   final int number;
   final String expDate;
+  final int cvvNumber;
   final String cardType;
   final String cardManufacturer;
   final String cardColor;
@@ -34,6 +37,7 @@ class CardModel {
       required this.name,
       required this.number,
       required this.expDate,
+      required this.cvvNumber,
       required this.cardType,
       required this.cardManufacturer,
       required this.cardColor});
@@ -43,6 +47,7 @@ class CardModel {
     String? name,
     int? number,
     String? expDate,
+    int? cvvNumber,
     String? cardType,
     String? cardManufacturer,
     String? cardColor,
@@ -52,6 +57,7 @@ class CardModel {
         name: name ?? this.name,
         number: number ?? this.number,
         expDate: expDate ?? this.expDate,
+        cvvNumber: cvvNumber ?? this.cvvNumber,
         cardType: cardType ?? this.cardType,
         cardManufacturer: cardManufacturer ?? this.cardManufacturer,
         cardColor: cardColor ?? this.cardColor,
@@ -62,6 +68,7 @@ class CardModel {
         name: json[CardFields.name] as String,
         number: json[CardFields.number] as int,
         expDate: json[CardFields.expDate] as String,
+        cvvNumber: json[CardFields.cvvNumber] as int,
         cardType: json[CardFields.cardType] as String,
         cardManufacturer: json[CardFields.cardManufacturer] as String,
         cardColor: json[CardFields.cardColor] as String,
@@ -72,6 +79,7 @@ class CardModel {
         CardFields.name: name,
         CardFields.number: number,
         CardFields.expDate: expDate.toString(),
+        CardFields.cvvNumber: cvvNumber,
         CardFields.cardType: cardType,
         CardFields.cardManufacturer: cardManufacturer,
         CardFields.cardColor: cardColor,

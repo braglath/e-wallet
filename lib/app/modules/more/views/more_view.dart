@@ -1,7 +1,13 @@
 import 'dart:io';
+import 'package:e_wallet/app/data/services/databse.dart';
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
+import 'package:e_wallet/app/data/services/local_auth_api.dart';
+import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
+import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
@@ -11,10 +17,19 @@ import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
 import '../controllers/more_controller.dart';
 
 class MoreView extends GetView<MoreController> {
+  final addController = Get.put<AddController>(AddController());
+  final homeController = Get.put<HomeController>(HomeController());
   @override
   Widget build(BuildContext context) {
     // print('user profile pic ${UserDetails().readUserProfilePicfromBox()}');
     return Scaffold(
+      bottomNavigationBar: SizedBox(
+        height: 100,
+        child: AdWidget(
+          key: UniqueKey(),
+          ad: AdMobService.createMoreBannerAd()..load(),
+        ),
+      ),
       body: SingleChildScrollView(
         reverse: true,
         child: Column(
@@ -79,7 +94,24 @@ class MoreView extends GetView<MoreController> {
                 ],
               ),
             ),
-            SizedBox(height: 15),
+            SizedBox(
+              height: 25,
+            ),
+            Button(
+              controller: controller,
+              title: 'Check fingerprilnt',
+              onpressed: () => controller.checkFingerprint(),
+            ),
+            Button(
+              controller: controller,
+              title: 'load ad',
+              onpressed: () => AdMobService().createInterAd(),
+            ),
+            Button(
+              controller: controller,
+              title: 'show ad',
+              onpressed: () => AdMobService().showInterad(),
+            ),
           ],
         ),
       ),
@@ -176,4 +208,22 @@ class MoreView extends GetView<MoreController> {
           ),
         ),
       );
+}
+
+class Button extends StatelessWidget {
+  final String title;
+  final Function()? onpressed;
+  const Button({
+    Key? key,
+    required this.title,
+    required this.onpressed,
+    required this.controller,
+  }) : super(key: key);
+
+  final MoreController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(onPressed: () => onpressed, child: Text(title));
+  }
 }

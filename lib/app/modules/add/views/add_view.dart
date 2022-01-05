@@ -33,6 +33,7 @@ class AddView extends GetView<AddController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: _mainBody(context),
     );
   }
@@ -54,6 +55,7 @@ class AddView extends GetView<AddController> {
             _name(),
             _cardNumber(),
             _cardExpDate(context),
+            _cvvNumber(),
             _cardType(context),
             _cardManufacturer(context),
             _cardColorPicker(context),
@@ -319,4 +321,26 @@ class AddView extends GetView<AddController> {
               ?.copyWith(color: Colors.white, fontSize: 22),
         ),
       ));
+
+  Widget _cvvNumber() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+          validator: (value) => controller.cvvValidator(value),
+          cursorColor: ThemeService().theme == ThemeMode.light
+              ? ColorResourcesLight.mainLIGHTColor
+              : Colors.white,
+          style: TextStyle(
+              color: ThemeService().theme == ThemeMode.light
+                  ? ColorResourcesLight.mainLIGHTColor
+                  : Colors.white),
+          controller: controller.cvvController,
+          maxLength: 3,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            labelText: 'CVV number',
+          )),
+    );
+  }
 }

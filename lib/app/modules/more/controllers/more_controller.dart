@@ -1,3 +1,4 @@
+import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -91,6 +92,21 @@ class MoreController extends GetxController {
       CustomSnackbar(title: 'Warning', message: 'Failed to pick image, $e')
           .showWarning();
       // print('Failed to pick image: $e');
+    }
+  }
+
+  void checkFingerprint() async {
+    final isAuthenticated = await LocalAuthApi.authenticate();
+    if (isAuthenticated) {
+      CustomSnackbar(
+              message: 'Fingerprint authentication successful',
+              title: 'Success')
+          .showSuccess();
+      print('Authentication Success');
+    } else {
+      CustomSnackbar(message: 'Fingerprint error', title: 'Success')
+          .showWarning();
+      print('Authentication Error');
     }
   }
 }

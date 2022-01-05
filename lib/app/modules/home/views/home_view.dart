@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:e_wallet/app/views/views/custom_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +16,7 @@ import 'package:e_wallet/app/modules/more/controllers/more_controller.dart';
 import 'package:e_wallet/app/modules/more/views/more_view.dart';
 import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
 import 'package:e_wallet/app/views/views/top_to_bottom_animation_view.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeView extends GetView<HomeController> {
   @override
@@ -27,7 +29,24 @@ class HomeView extends GetView<HomeController> {
       child: Scaffold(
           appBar: AppBar(
             title: TopToBottomAnimationView(
-                duration: Duration(milliseconds: 800), child: Text('E-Wallet')),
+                duration: Duration(milliseconds: 800),
+                child: RichText(
+                  text: TextSpan(
+                    text: 'E-',
+                    style: GoogleFonts.roboto(
+                        fontSize: 22, fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'Wallet',
+                      ),
+                      TextSpan(
+                          text: ' lite',
+                          style: GoogleFonts.roboto(
+                            fontSize: 15,
+                          )),
+                    ],
+                  ),
+                )),
             titleTextStyle:
                 GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold),
             centerTitle: true,
@@ -52,6 +71,7 @@ class HomeView extends GetView<HomeController> {
               controller: controller.tabController,
             ),
           ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
           floatingActionButton: Obx(() {
             return controller.shouldAutoscroll.value &&
                     controller.tabController.index == 0
@@ -70,7 +90,7 @@ class HomeView extends GetView<HomeController> {
                         }),
                   )
                 : controller.cards.length > 3 &&
-                        controller.tabController.index == 0 
+                        controller.tabController.index == 0
                     ? FadedScaleAnimation(
                         FloatingActionButton(
                             heroTag: null,
@@ -87,16 +107,6 @@ class HomeView extends GetView<HomeController> {
                       )
                     : SizedBox.shrink();
           }),
-          // floatingActionButton: FloatingActionButton.extended(
-          //   // extendedPadding: EdgeInsets.symmetric(horizontal: 10),
-          //   // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          //   onPressed: () => controller.scrollToAddProductPage(),
-          //   label: Text(
-          //     'Add product',
-          //     style:
-          //         GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.bold),
-          //   ),
-          // ),
           body: TabBarView(
             controller: controller.tabController,
             children: [_homeBody(), AddView(), MoreView()],
@@ -104,8 +114,16 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget _homeBody() => SafeArea(
-        child: Obx(() {
+  Widget _homeBody() => Scaffold(
+        bottomNavigationBar: SizedBox(
+          height: 100,
+          child: AdWidget(
+            key: UniqueKey(),
+            ad: AdMobService.createHomeBannerAd()..load(),
+          ),
+        ),
+        extendBody: true,
+        body: Obx(() {
           return Stack(
             alignment: Alignment.center,
             children: [
@@ -114,6 +132,7 @@ class HomeView extends GetView<HomeController> {
                   builder: (context, snapshot) {
                     return Scrollbar(
                       child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: 110),
                           controller: controller.scrollController.value,
                           physics: BouncingScrollPhysics(),
                           itemCount: controller.cards.length,
@@ -166,6 +185,8 @@ class HomeView extends GetView<HomeController> {
     String cardNumber = cardDetails.number.toString();
     String firstFourNumbers = cardNumber.substring(0, 4);
     String lastFourNumbers = cardNumber.substring(12);
+    String middleFirstFourNumbers = cardNumber.substring(4, 8);
+    String middleSecondFourNumbers = cardNumber.substring(8, 12);
 
     return FadedScaleAnimation(
       Padding(
@@ -209,77 +230,130 @@ class HomeView extends GetView<HomeController> {
                       cardDetails.name,
                       style: Theme.of(context).textTheme.headline3,
                     ),
-                    RichText(
-                      text: TextSpan(
-                        text: firstFourNumbers,
-                        style: Theme.of(context).textTheme.headline3?.copyWith(
-                            fontWeight: FontWeight.w300, letterSpacing: 2),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: ' **** ',
+                    GestureDetector(
+                      onTap: () => controller.cardNumberAuthentication(),
+                      child: Obx(() {
+                        return RichText(
+                          text: TextSpan(
+                            text: firstFourNumbers,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline3
                                 ?.copyWith(
                                     fontWeight: FontWeight.w300,
                                     letterSpacing: 2),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: controller.showCardNumber.isFalse
+                                    ? ' **** '
+                                    : ' $middleFirstFourNumbers ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w300,
+                                        letterSpacing: 2),
+                              ),
+                              TextSpan(
+                                text: controller.showCardNumber.isFalse
+                                    ? ' **** '
+                                    : ' $middleSecondFourNumbers ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w300,
+                                        letterSpacing: 2),
+                              ),
+                              TextSpan(
+                                text: lastFourNumbers,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w300,
+                                        letterSpacing: 2),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: ' **** ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    letterSpacing: 2),
-                          ),
-                          TextSpan(
-                            text: lastFourNumbers,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    letterSpacing: 2),
-                          ),
-                        ],
-                      ),
+                        );
+                      }),
                     ),
-                    RichText(
-                      text: TextSpan(
-                        text: 'Exp on - ',
-                        style: Theme.of(context).textTheme.headline4?.copyWith(
-                            fontWeight: FontWeight.w400, fontSize: 14),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: cardDetails.expDate.toString(),
-                            style: Theme.of(context).textTheme.headline4,
+                    Row(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: 'Exp on - ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w400, fontSize: 14),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: cardDetails.expDate.toString(),
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          width: 25,
+                        ),
+                        GestureDetector(
+                          onTap: () => controller.cvvAuthentication(),
+                          child: Obx(() {
+                            return RichText(
+                              text: TextSpan(
+                                text: 'CVV - ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline4
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: controller.showCvvNumber.isFalse
+                                        ? ' *** '
+                                        : ' ${cardDetails.cvvNumber.toString()} ',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
             IconButton(
-                onPressed: () => CustomDialogue(
-                      title: 'Remove card?',
-                      textConfirm: 'Confim',
-                      textCancel: 'Cancel',
-                      onpressedConfirm: () =>
-                          controller.deleteCard(controller.cards[index].id!),
-                      onpressedCancel: () => Get.back(),
-                      contentWidget: Text(
-                        'You are about to remove this card.\nThis cannot be undone',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline4
-                            ?.copyWith(color: Colors.white),
-                      ),
-                      isDismissible: true,
-                    ).showDialogue(),
+                onPressed: () {
+                  AdMobService().createInterAd();
+                  CustomDialogue(
+                    title: 'Remove card?',
+                    textConfirm: 'Confim',
+                    textCancel: 'Cancel',
+                    onpressedConfirm: () {
+                      controller.deleteCard(controller.cards[index].id!);
+                      AdMobService().showInterad();
+                    },
+                    onpressedCancel: () => Get.back(),
+                    contentWidget: Text(
+                      'You are about to remove this card.\nThis cannot be undone',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          ?.copyWith(color: Colors.white),
+                    ),
+                    isDismissible: true,
+                  ).showDialogue();
+                },
                 icon: FaIcon(
                   FontAwesomeIcons.trash,
                   color: Colors.white,

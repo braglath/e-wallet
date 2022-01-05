@@ -1,6 +1,8 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:e_wallet/app/data/model/card_model.dart';
 
 class CardDatabase {
@@ -18,9 +20,9 @@ class CardDatabase {
   }
 
   Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
-
+    Directory dbPath = await getApplicationDocumentsDirectory();
+    final path = join(dbPath.path, filePath);
+    print(' db final path - $path');
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
@@ -35,6 +37,7 @@ class CardDatabase {
       ${CardFields.name} $stringType,
       ${CardFields.number} $numberType,
       ${CardFields.expDate} $stringType,
+      ${CardFields.cvvNumber} $numberType,
       ${CardFields.cardType} $stringType,
       ${CardFields.cardManufacturer} $stringType,
       ${CardFields.cardColor} $stringType
@@ -47,6 +50,7 @@ class CardDatabase {
     final db = await instance.database;
 
     final id = await db.insert(tableCards, cardModel.toJson());
+    print('create id - $id');
 
     return cardModel.copy(id: id);
   }
@@ -63,6 +67,7 @@ class CardDatabase {
 
     //? now we have the convert the above map to node object
     if (maps.isNotEmpty) {
+      print('maps - $maps');
       return CardModel.fromJson(maps.first);
     } else {
       throw Exception('ID $id is not found');
@@ -73,11 +78,13 @@ class CardDatabase {
   Future<List<CardModel>> readAllCards() async {
     final db = await instance.database;
     final orderBy = '${CardFields.id} DESC'; //? to order in ascending order
+    print('order by - $orderBy');
 
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableCards ORDER BY $orderBy');
 
     final result = await db.query(tableCards, orderBy: orderBy);
+    print(result);
     //? convert the json to card mobel object
     return result.map((json) => CardModel.fromJson(json)).toList();
   }

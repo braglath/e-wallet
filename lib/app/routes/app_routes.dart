@@ -8,6 +8,7 @@ abstract class Routes {
   static const ADD = _Paths.ADD;
   static const MORE = _Paths.MORE;
   static const APPBAR = _Paths.APPBAR;
+  static const TEST = _Paths.TEST;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const ADD = '/add';
   static const MORE = '/more';
   static const APPBAR = '/appbar';
+  static const TEST = '/test';
 }

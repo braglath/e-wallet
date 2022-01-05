@@ -1,3 +1,5 @@
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
+import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   var shouldAutoscroll = false.obs;
   final DateFormat format = DateFormat('MM/yyyy');
   DateTime timeBackButtonPressed = DateTime.now();
+  final showCardNumber = false.obs;
+  final showCvvNumber = false.obs;
 
   final List<Tab> myTabs = <Tab>[
     Tab(
@@ -97,6 +101,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final cardsList = await CardDatabase.instance.readAllCards();
     cards.assignAll(cardsList);
     isLoading.value = false;
+    print('cards ${cards[1].number}');
   }
 
   Future deleteCard(int id) async {
@@ -125,4 +130,27 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
       return true;
     }
   }
+
+  void cardNumberAuthentication() async {
+    final isAuthenticated = await LocalAuthApi.authenticate();
+    if (isAuthenticated) {
+      showCardNumber.value = true;
+      print('Authentication Success');
+    } else {
+      showCardNumber.value = false;
+      print('Authentication Error');
+    }
+  }
+
+  void cvvAuthentication() async {
+    final isAuthenticated = await LocalAuthApi.authenticate();
+    if (isAuthenticated) {
+      showCvvNumber.value = true;
+      print('Authentication Success');
+    } else {
+      showCvvNumber.value = false;
+      print('Authentication Error');
+    }
+  }
 }
+
