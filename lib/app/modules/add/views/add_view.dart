@@ -1,11 +1,14 @@
-import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
+
 import '../controllers/add_controller.dart';
 
 class AddView extends GetView<AddController> {
@@ -52,10 +55,10 @@ class AddView extends GetView<AddController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 20),
-            _name(),
-            _cardNumber(),
+            _name(context),
+            _cardNumber(context),
             _cardExpDate(context),
-            _cvvNumber(),
+            _cvvNumber(context),
             _cardType(context),
             _cardManufacturer(context),
             _cardColorPicker(context),
@@ -68,9 +71,10 @@ class AddView extends GetView<AddController> {
     );
   }
 
-  Widget _name() => Padding(
+  Widget _name(context) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
+            onEditingComplete: () => FocusScope.of(context).nextFocus(),
             validator: (value) => controller.nameValidator(value),
             cursorColor: ThemeService().theme == ThemeMode.light
                 ? ColorResourcesLight.mainLIGHTColor
@@ -87,10 +91,11 @@ class AddView extends GetView<AddController> {
             )),
       );
 
-  Widget _cardNumber() => Padding(
+  Widget _cardNumber(context) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
             validator: (value) => controller.cardValidator(value),
+            onEditingComplete: () => FocusScope.of(context).unfocus(),
             cursorColor: ThemeService().theme == ThemeMode.light
                 ? ColorResourcesLight.mainLIGHTColor
                 : Colors.white,
@@ -153,6 +158,29 @@ class AddView extends GetView<AddController> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _cvvNumber(context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+          onEditingComplete: () => FocusScope.of(context).unfocus(),
+          validator: (value) => controller.cvvValidator(value),
+          cursorColor: ThemeService().theme == ThemeMode.light
+              ? ColorResourcesLight.mainLIGHTColor
+              : Colors.white,
+          style: TextStyle(
+              color: ThemeService().theme == ThemeMode.light
+                  ? ColorResourcesLight.mainLIGHTColor
+                  : Colors.white),
+          controller: controller.cvvController,
+          maxLength: 3,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            labelText: 'CVV number',
+          )),
     );
   }
 
@@ -344,26 +372,4 @@ class AddView extends GetView<AddController> {
           ],
         ),
       ));
-
-  Widget _cvvNumber() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-          validator: (value) => controller.cvvValidator(value),
-          cursorColor: ThemeService().theme == ThemeMode.light
-              ? ColorResourcesLight.mainLIGHTColor
-              : Colors.white,
-          style: TextStyle(
-              color: ThemeService().theme == ThemeMode.light
-                  ? ColorResourcesLight.mainLIGHTColor
-                  : Colors.white),
-          controller: controller.cvvController,
-          maxLength: 3,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: 'CVV number',
-          )),
-    );
-  }
 }

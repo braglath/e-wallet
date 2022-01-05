@@ -1,10 +1,10 @@
-import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
+import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/views/views/custom_snackbars.dart';
 
@@ -40,7 +40,6 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   void onInit() {
     tabController = TabController(length: 3, vsync: this);
     scrollController.value.addListener(_scrollListener);
-    // print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
     super.onInit();
   }
 
@@ -55,8 +54,6 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     if (scrollController.value.hasClients &&
         scrollController.value.position.pixels >= 150) {
       shouldAutoscroll.value = true;
-      // print(
-      //     'scrollController value - ${scrollController.value.position.pixels}');
     } else {
       shouldAutoscroll.value = false;
     }
@@ -66,7 +63,6 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final double start = 0;
     scrollController.value.animateTo(start,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-    // print(scrollController.value);
   }
 
   void scrollToBottomm() {
@@ -74,7 +70,6 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
         scrollController.value.position.maxScrollExtent,
         duration: Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn);
-    // print(scrollController.value);
   }
 
   void increment() => count.value++;
@@ -104,7 +99,6 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future deleteCard(int id) async {
-    // print(id);
     isLoading.value = true;
     await CardDatabase.instance.delete(id);
     cards.removeWhere((element) => element.id == id);
@@ -152,4 +146,3 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 }
-

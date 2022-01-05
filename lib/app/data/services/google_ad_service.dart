@@ -1,18 +1,18 @@
 import 'dart:io';
-import 'package:e_wallet/app/data/utils/usable_strings.dart';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 
 class AdMobService {
   int maxFailedLoadAttempts = 3;
   int _numRewardedLoadAttempts = 0;
 
-  static String get bannerHomeAdUnitId => Platform.isAndroid
-      ? AdUnitID.bannerHome
-      : AdUnitID.bannerHome;
+  static String get bannerHomeAdUnitId =>
+      Platform.isAndroid ? AdUnitID.bannerHome : AdUnitID.bannerHome;
 
-  static String get bannerMoreAdUnitId => Platform.isAndroid
-      ? AdUnitID.bannerMore
-      : AdUnitID.bannerMore;
+  static String get bannerMoreAdUnitId =>
+      Platform.isAndroid ? AdUnitID.bannerMore : AdUnitID.bannerMore;
 
   static InterstitialAd? _interstitialAd;
   static RewardedAd? _rewardedAd;

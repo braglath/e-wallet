@@ -1,20 +1,19 @@
 import 'dart:io';
-import 'package:e_wallet/app/data/services/databse.dart';
-import 'package:e_wallet/app/data/services/google_ad_service.dart';
-import 'package:e_wallet/app/data/services/local_auth_api.dart';
-import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
-import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
+
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 import 'package:flutter/material.dart';
+
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
+import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
+import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:e_wallet/app/views/views/custom_bottom_sheet.dart';
 import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
 import '../controllers/more_controller.dart';
@@ -22,51 +21,39 @@ import '../controllers/more_controller.dart';
 class MoreView extends GetView<MoreController> {
   final addController = Get.put<AddController>(AddController());
   final homeController = Get.put<HomeController>(HomeController());
+
   @override
   Widget build(BuildContext context) {
-    // print('user profile pic ${UserDetails().readUserProfilePicfromBox()}');
     return Scaffold(
-      // bottomNavigationBar: SizedBox(
-      //   height: 100,
-      //   child: AdWidget(
-      //     key: UniqueKey(),
-      //     ad: AdMobService.createMoreBannerAd()..load(),
-      //   ),
-      // ),
-      body: SingleChildScrollView(
-        reverse: true,
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            profilePick(context),
-            SizedBox(height: 25),
-            expansiontileWidget(context),
-            SizedBox(
-              height: 5,
-            ),
-            AppVersion(controller: controller),
-            SizedBox(
-              height: 25,
-            ),
-            Button(
-              controller: controller,
-              title: 'Check fingerprilnt',
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            SecureModeSwitch(
-              controller: controller,
-            ),
-            Text(
-              'Secure mode prevents users from taking screenshots or screen recording',
-              style: Theme.of(context).textTheme.caption,
-              textAlign: TextAlign.center,
-            )
-          ],
-        ),
+      body: _mainMoreViewBody(context),
+    );
+  }
+
+  SingleChildScrollView _mainMoreViewBody(BuildContext context) {
+    return SingleChildScrollView(
+      reverse: true,
+      child: Column(
+        children: [
+          SizedBox(height: 20),
+          profilePick(context),
+          SizedBox(height: 25),
+          expansiontileWidget(context),
+          SizedBox(height: 5),
+          AppVersion(controller: controller),
+          SizedBox(height: 25),
+          Button(controller: controller, title: MainStrings.checkFingerprint),
+          SizedBox(height: 25),
+          SecureModeSwitch(controller: controller),
+          _secureModeCaption(context)
+        ],
       ),
     );
+  }
+
+  Text _secureModeCaption(BuildContext context) {
+    return Text(MorePageStrings.secureCaption,
+        style: Theme.of(context).textTheme.caption,
+        textAlign: TextAlign.center);
   }
 
   Obx expansiontileWidget(BuildContext context) {
@@ -96,7 +83,7 @@ class MoreView extends GetView<MoreController> {
         title: Text(
           controller.name.value.isEmpty
               ? UserDetails().readUserNamefromBox().isEmpty
-                  ? 'Name'
+                  ? MainStrings.name
                   : UserDetails().readUserNamefromBox()
               : UserDetails().readUserNamefromBox(),
           style: Theme.of(context).textTheme.headline2,
@@ -115,7 +102,7 @@ class MoreView extends GetView<MoreController> {
                 controller.saveName();
                 controller.cardA.currentState?.collapse();
               },
-              child: Text('Confirm'))
+              child: Text(MainStrings.confirm))
         ],
       );
     });
@@ -127,24 +114,28 @@ class MoreView extends GetView<MoreController> {
         alignment: Alignment.bottomCenter,
         children: [
           _profileImage(context),
-          IconButton(
-              splashRadius: 12,
-              alignment: Alignment.bottomCenter,
-              onPressed: () => CustomBottomSheet(
-                    icon1: FontAwesomeIcons.cameraRetro,
-                    icon2: FontAwesomeIcons.photoVideo,
-                    title1: 'Camera',
-                    titile2: 'Gallery',
-                    onTap1: () => controller.pickImage(ImageSource.camera),
-                    onTap2: () => controller.pickImage(ImageSource.gallery),
-                  ).show(),
-              icon: FaIcon(
-                FontAwesomeIcons.camera,
-                color: Colors.white,
-              )),
+          _cameraIcon(),
         ],
       ),
     );
+  }
+
+  IconButton _cameraIcon() {
+    return IconButton(
+        splashRadius: 12,
+        alignment: Alignment.bottomCenter,
+        onPressed: () => CustomBottomSheet(
+              icon1: FontAwesomeIcons.cameraRetro,
+              icon2: FontAwesomeIcons.photoVideo,
+              title1: MainStrings.camera,
+              titile2: MainStrings.gallery,
+              onTap1: () => controller.pickImage(ImageSource.camera),
+              onTap2: () => controller.pickImage(ImageSource.gallery),
+            ).show(),
+        icon: FaIcon(
+          FontAwesomeIcons.camera,
+          color: Colors.white,
+        ));
   }
 
   Widget _profileImage(BuildContext context) {
@@ -154,7 +145,7 @@ class MoreView extends GetView<MoreController> {
         borderRadius: BorderRadius.circular(50),
         onTap: () => {},
         child: Hero(
-          tag: 'profileicon',
+          tag: MainStrings.profileHeroTag,
           child: Center(
               child: CircleAvatar(
             backgroundColor: Colors.white,
@@ -206,7 +197,7 @@ class MoreView extends GetView<MoreController> {
               border: InputBorder.none,
               labelText: controller.name.value.isEmpty
                   ? UserDetails().readUserNamefromBox().isEmpty
-                      ? 'Name'
+                      ? MainStrings.name
                       : UserDetails().readUserNamefromBox()
                   : UserDetails().readUserNamefromBox(),
             ),
@@ -229,7 +220,6 @@ class AppVersion extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
         children: [
-          // Spacer(),
           Obx(() {
             return Text(
               'App version - ${controller.appVersion}',
@@ -267,7 +257,7 @@ class SecureModeSwitch extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'Toggle secure mode',
+                MainStrings.toggleSecureMode,
                 style: GoogleFonts.roboto(
                         fontSize: 22, fontWeight: FontWeight.bold)
                     .copyWith(
@@ -284,8 +274,6 @@ class SecureModeSwitch extends StatelessWidget {
                   valueFontSize: 12.0,
                   toggleSize: 18.0,
                   value: controller.isSecureModeOn.value,
-                  // borderRadius: 30.0,
-                  // padding: 8.0,
                   showOnOff: true,
                   onToggle: (val) => controller.secureModeSwitch(val),
                 );

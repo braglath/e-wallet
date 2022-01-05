@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:e_wallet/app/data/services/google_ad_service.dart';
-import 'package:e_wallet/app/views/views/custom_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:e_wallet/app/data/model/card_model.dart';
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
@@ -14,14 +14,14 @@ import 'package:e_wallet/app/modules/add/views/add_view.dart';
 import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:e_wallet/app/modules/more/controllers/more_controller.dart';
 import 'package:e_wallet/app/modules/more/views/more_view.dart';
+import 'package:e_wallet/app/views/views/custom_dialogue.dart';
 import 'package:e_wallet/app/views/views/faded_scale_animation.dart';
 import 'package:e_wallet/app/views/views/top_to_bottom_animation_view.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeView extends GetView<HomeController> {
-  @override
   final addController = Get.put<AddController>(AddController());
   final moreController = Get.put<MoreController>(MoreController());
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -29,7 +29,7 @@ class HomeView extends GetView<HomeController> {
       child: Scaffold(
           extendBody: true,
           bottomNavigationBar: SizedBox(
-            height: 50,
+            height: 70,
             child: AdWidget(
               key: UniqueKey(),
               ad: AdMobService.createHomeBannerAd()..load(),
@@ -177,11 +177,9 @@ class HomeView extends GetView<HomeController> {
       );
 
   Widget cardsMain(BuildContext context, CardModel cardDetails, int index) {
-    // print('card color - ${cardDetails.cardColor}');
     String removeColortext = cardDetails.cardColor.replaceAll('Color', '');
     String removeBracketLeft = removeColortext.replaceAll('(', '');
     String cardColor = removeBracketLeft.replaceAll(')', '');
-    // print(cardColor);
     String cardNumber = cardDetails.number.toString();
     String firstFourNumbers = cardNumber.substring(0, 4);
     String lastFourNumbers = cardNumber.substring(12);

@@ -7,7 +7,6 @@ import 'package:e_wallet/app/modules/home/views/home_view.dart';
 import 'package:e_wallet/app/modules/more/bindings/more_binding.dart';
 import 'package:e_wallet/app/modules/more/views/more_view.dart';
 
-
 part 'app_routes.dart';
 
 class AppPages {

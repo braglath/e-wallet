@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CustomDialogue {
   String title;
