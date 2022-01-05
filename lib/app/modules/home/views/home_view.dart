@@ -27,6 +27,14 @@ class HomeView extends GetView<HomeController> {
     return WillPopScope(
       onWillPop: () => controller.pressBackAgainToExit(),
       child: Scaffold(
+          extendBody: true,
+          bottomNavigationBar: SizedBox(
+            height: 50,
+            child: AdWidget(
+              key: UniqueKey(),
+              ad: AdMobService.createHomeBannerAd()..load(),
+            ),
+          ),
           appBar: AppBar(
             title: TopToBottomAnimationView(
                 duration: Duration(milliseconds: 800),
@@ -115,14 +123,6 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _homeBody() => Scaffold(
-        bottomNavigationBar: SizedBox(
-          height: 100,
-          child: AdWidget(
-            key: UniqueKey(),
-            ad: AdMobService.createHomeBannerAd()..load(),
-          ),
-        ),
-        extendBody: true,
         body: Obx(() {
           return Stack(
             alignment: Alignment.center,

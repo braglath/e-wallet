@@ -1,4 +1,5 @@
 import 'package:e_wallet/app/data/services/local_auth_api.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
@@ -18,16 +19,16 @@ class MoreController extends GetxController {
   final isSecureModeOn = false.obs;
   final checkFingerPrint = false.obs;
   final name = ''.obs;
-
   XFile? photo;
   final TextEditingController nameController = TextEditingController();
   final GlobalKey<FormState> profileNameKey = GlobalKey<FormState>();
-
+  final GlobalKey<ExpansionTileCardState> cardA = GlobalKey();
   @override
   void onInit() {
     super.onInit();
     initPackageInfo();
     isSecureModeOn.value = UserDetails().readSecureModefromBox();
+
     // print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
   }
 

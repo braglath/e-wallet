@@ -61,7 +61,7 @@ class AddView extends GetView<AddController> {
             _cardColorPicker(context),
             SizedBox(height: 20),
             _addCardButton(context),
-            SizedBox(height: 20),
+            SizedBox(height: 75),
           ],
         ),
       ),
@@ -323,10 +323,7 @@ class AddView extends GetView<AddController> {
       );
 
   _addCardButton(context) => ElevatedButton(
-      onPressed: () {
-        AdMobService().createInterAd();
-        controller.addCard().whenComplete(() => AdMobService().showInterad());
-      },
+      onPressed: () => controller.addCard(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 2),
         child: Row(

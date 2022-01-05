@@ -4,6 +4,7 @@ import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
 import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,13 +26,13 @@ class MoreView extends GetView<MoreController> {
   Widget build(BuildContext context) {
     // print('user profile pic ${UserDetails().readUserProfilePicfromBox()}');
     return Scaffold(
-      bottomNavigationBar: SizedBox(
-        height: 100,
-        child: AdWidget(
-          key: UniqueKey(),
-          ad: AdMobService.createMoreBannerAd()..load(),
-        ),
-      ),
+      // bottomNavigationBar: SizedBox(
+      //   height: 100,
+      //   child: AdWidget(
+      //     key: UniqueKey(),
+      //     ad: AdMobService.createMoreBannerAd()..load(),
+      //   ),
+      // ),
       body: SingleChildScrollView(
         reverse: true,
         child: Column(
@@ -39,63 +40,11 @@ class MoreView extends GetView<MoreController> {
             SizedBox(height: 20),
             profilePick(context),
             SizedBox(height: 25),
-            Obx(() {
-              return ExpansionTile(
-                childrenPadding: EdgeInsets.all(12),
-                // backgroundColor: ThemeService().theme == ThemeMode.light
-                //     ? ColorResourcesLight.mainLIGHTColor
-                //     : ColorResourcesDark.mainDARKColor,
-                onExpansionChanged: (value) => controller.editNameField(value),
-                title: Text(
-                  controller.name.value.isEmpty
-                      ? UserDetails().readUserNamefromBox().isEmpty
-                          ? 'Name'
-                          : UserDetails().readUserNamefromBox()
-                      : UserDetails().readUserNamefromBox(),
-                  style: Theme.of(context).textTheme.headline2,
-                ),
-                trailing: controller.editName.value
-                    ? Icon(
-                        Icons.cancel,
-                        color: ThemeService().theme == ThemeMode.light
-                            ? ColorResourcesLight.mainLIGHTColor
-                            : ColorResourcesDark.mainDARKColor,
-                      )
-                    : Icon(
-                        Icons.edit,
-                        color: ThemeService().theme == ThemeMode.light
-                            ? ColorResourcesLight.mainLIGHTColor
-                            : ColorResourcesDark.mainDARKColor,
-                      ),
-                children: [
-                  _name(),
-                  ElevatedButton(
-                      onPressed: () => controller.saveName(),
-                      child: Text('Confirm'))
-                ],
-              );
-            }),
-
-            // Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
-                children: [
-                  // Spacer(),
-                  Obx(() {
-                    return Text(
-                      'App version - ${controller.appVersion}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: ThemeService().theme == ThemeMode.light
-                            ? ColorResourcesLight.mainLIGHTColor
-                            : Colors.white,
-                      ),
-                    );
-                  }),
-                ],
-              ),
+            expansiontileWidget(context),
+            SizedBox(
+              height: 5,
             ),
+            AppVersion(controller: controller),
             SizedBox(
               height: 25,
             ),
@@ -103,17 +52,6 @@ class MoreView extends GetView<MoreController> {
               controller: controller,
               title: 'Check fingerprilnt',
             ),
-            // Button(
-            //   controller: controller,
-            //   title: 'load ad',
-            //   onpressed: () => AdMobService().createInterAd(),
-            // ),
-            // Button(
-            //   controller: controller,
-            //   title: 'show ad',
-            //   onpressed: () => AdMobService().showInterad(),
-            // ),
-
             SizedBox(
               height: 25,
             ),
@@ -129,6 +67,58 @@ class MoreView extends GetView<MoreController> {
         ),
       ),
     );
+  }
+
+  Obx expansiontileWidget(BuildContext context) {
+    return Obx(() {
+      return ExpansionTileCard(
+        turnsCurve: Curves.fastOutSlowIn,
+        duration: Duration(milliseconds: 300),
+        animateTrailing: true,
+        elevation: 0,
+        baseColor: Colors.transparent,
+        expandedColor: Colors.transparent,
+        key: controller.cardA,
+        onExpansionChanged: (value) => controller.editNameField(value),
+        trailing: controller.editName.value
+            ? Icon(
+                Icons.cancel,
+                color: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : ColorResourcesDark.mainDARKColor,
+              )
+            : Icon(
+                Icons.edit,
+                color: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : ColorResourcesDark.mainDARKColor,
+              ),
+        title: Text(
+          controller.name.value.isEmpty
+              ? UserDetails().readUserNamefromBox().isEmpty
+                  ? 'Name'
+                  : UserDetails().readUserNamefromBox()
+              : UserDetails().readUserNamefromBox(),
+          style: Theme.of(context).textTheme.headline2,
+        ),
+        children: <Widget>[
+          Divider(
+            thickness: 1.0,
+            height: 1.0,
+            color: ThemeService().theme == ThemeMode.light
+                ? ColorResourcesLight.mainLIGHTColor
+                : Colors.white,
+          ),
+          _name(),
+          ElevatedButton(
+              onPressed: () {
+                controller.saveName();
+                controller.cardA.currentState?.collapse();
+              },
+              child: Text('Confirm'))
+        ],
+      );
+    });
   }
 
   Widget profilePick(context) {
@@ -158,8 +148,6 @@ class MoreView extends GetView<MoreController> {
   }
 
   Widget _profileImage(BuildContext context) {
-    // print('user profile pic ${UserDetails().readUserProfilePicfromBox()}');
-
     return Obx(() {
       return InkWell(
         radius: 25,
@@ -216,11 +204,47 @@ class MoreView extends GetView<MoreController> {
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
               border: InputBorder.none,
-              labelText: 'Name',
+              labelText: controller.name.value.isEmpty
+                  ? UserDetails().readUserNamefromBox().isEmpty
+                      ? 'Name'
+                      : UserDetails().readUserNamefromBox()
+                  : UserDetails().readUserNamefromBox(),
             ),
           ),
         ),
       );
+}
+
+class AppVersion extends StatelessWidget {
+  const AppVersion({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final MoreController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        children: [
+          // Spacer(),
+          Obx(() {
+            return Text(
+              'App version - ${controller.appVersion}',
+              style: TextStyle(
+                fontSize: 20,
+                color: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : Colors.white,
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
 }
 
 class SecureModeSwitch extends StatelessWidget {

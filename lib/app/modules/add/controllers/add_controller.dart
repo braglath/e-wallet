@@ -1,3 +1,4 @@
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,13 +22,8 @@ class AddController extends GetxController {
   final cardManufacturer = 'Pick card manufacturer'.obs;
   final screenPickerColor = ColorResourcesLight.mainLIGHTColor.obs;
 
-  final count = 0.obs;
-
   @override
   final homeController = Get.put<HomeController>(HomeController());
-
-  void onClose() {}
-  void increment() => count.value++;
 
   String? nameValidator(String? value) {
     if (value!.isEmpty) {
@@ -106,6 +102,7 @@ class AddController extends GetxController {
       } else {
         // print(
         //     'Name - ${nameController.text}\nCard number - ${numberController.text}\nExp date - ${formattedDate.value}\nType - ${cardtype.value}\nManufacturer - ${cardManufacturer.value}\nCard color - ${screenPickerColor.value}');
+        AdMobService().createInterAd();
         final card = CardModel(
             name: nameController.text,
             number: int.parse(numberController.text),
@@ -120,6 +117,7 @@ class AddController extends GetxController {
           homeController.refresh();
           CustomSnackbar(title: 'Success', message: 'Card added successfully')
               .showSuccess();
+          AdMobService().showInterad();
           scrollToAddProductPage();
           resetAddProductsDetails();
         });
