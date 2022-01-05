@@ -1,3 +1,4 @@
+import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,7 +34,6 @@ class AddView extends GetView<AddController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: _mainBody(context),
     );
   }
@@ -137,8 +137,21 @@ class AddView extends GetView<AddController> {
                   : Colors.white),
         ),
         ElevatedButton(
-            onPressed: () => controller.selectDate(context),
-            child: Text('Pick date'))
+          onPressed: () => controller.selectDate(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Pick date',
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              FaIcon(FontAwesomeIcons.calendarAlt)
+            ],
+          ),
+        )
       ],
     );
   }
@@ -310,15 +323,28 @@ class AddView extends GetView<AddController> {
       );
 
   _addCardButton(context) => ElevatedButton(
-      onPressed: () => controller.addCard(),
+      onPressed: () {
+        AdMobService().createInterAd();
+        controller.addCard().whenComplete(() => AdMobService().showInterad());
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 2),
-        child: Text(
-          'Add Card',
-          style: Theme.of(context)
-              .textTheme
-              .headline3
-              ?.copyWith(color: Colors.white, fontSize: 22),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Add Card',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline3
+                  ?.copyWith(color: Colors.white, fontSize: 22),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            FaIcon(FontAwesomeIcons.creditCard)
+          ],
         ),
       ));
 

@@ -7,12 +7,12 @@ class AdMobService {
   int _numRewardedLoadAttempts = 0;
 
   static String get bannerHomeAdUnitId => Platform.isAndroid
-      ? UsableStrings.bannerHomeAdUnitID
-      : UsableStrings.bannerHomeAdUnitID;
+      ? AdUnitID.bannerHome
+      : AdUnitID.bannerHome;
 
   static String get bannerMoreAdUnitId => Platform.isAndroid
-      ? UsableStrings.bannerMoreAdUnitID
-      : UsableStrings.bannerMoreAdUnitID;
+      ? AdUnitID.bannerMore
+      : AdUnitID.bannerMore;
 
   static InterstitialAd? _interstitialAd;
   static RewardedAd? _rewardedAd;
@@ -71,7 +71,7 @@ class AdMobService {
 // 2 mthods, one is to create the ad and the next is to show the ad
   void createInterAd() {
     InterstitialAd.load(
-      adUnitId: UsableStrings.interstitialAdUnitID,
+      adUnitId: AdUnitID.intertitial,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -111,7 +111,7 @@ class AdMobService {
 
   void createRewardedAd() {
     RewardedAd.load(
-        adUnitId: UsableStrings.rewardedAdUnitID,
+        adUnitId: AdUnitID.rewarded,
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {

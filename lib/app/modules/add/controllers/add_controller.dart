@@ -1,12 +1,8 @@
-import 'package:e_wallet/app/data/services/google_ad_service.dart';
-import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
@@ -29,12 +25,6 @@ class AddController extends GetxController {
 
   @override
   final homeController = Get.put<HomeController>(HomeController());
-
-  @override
-  void onInit() {
-    super.onInit();
-    AdMobService().createInterAd();
-  }
 
   void onClose() {}
   void increment() => count.value++;
@@ -130,7 +120,6 @@ class AddController extends GetxController {
           homeController.refresh();
           CustomSnackbar(title: 'Success', message: 'Card added successfully')
               .showSuccess();
-          AdMobService().showInterad();
           scrollToAddProductPage();
           resetAddProductsDetails();
         });

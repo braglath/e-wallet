@@ -102,7 +102,6 @@ class MoreView extends GetView<MoreController> {
             Button(
               controller: controller,
               title: 'Check fingerprilnt',
-              onpressed: () => controller.checkFingerprint(),
             ),
             // Button(
             //   controller: controller,
@@ -275,11 +274,9 @@ class SecureModeSwitch extends StatelessWidget {
 
 class Button extends StatelessWidget {
   final String title;
-  final Function()? onpressed;
   const Button({
     Key? key,
     required this.title,
-    required this.onpressed,
     required this.controller,
   }) : super(key: key);
 
@@ -287,6 +284,18 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: () => onpressed, child: Text(title));
+    return ElevatedButton(
+        onPressed: () => controller.checkFingerprint(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title),
+            SizedBox(
+              width: 10,
+            ),
+            FaIcon(FontAwesomeIcons.fingerprint)
+          ],
+        ));
   }
 }

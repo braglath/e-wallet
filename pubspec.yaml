@@ -24,6 +24,7 @@ dependencies:
   google_mobile_ads: 1.0.1
   flutter_windowmanager: 0.2.0
   flutter_switch: 0.3.2
+  native_admob_flutter: 1.5.0
   flutter: 
     sdk: flutter
 

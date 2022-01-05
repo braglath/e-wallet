@@ -16,6 +16,7 @@ class MoreController extends GetxController {
   final editName = false.obs;
   final secureModeWindow = false.obs;
   final isSecureModeOn = false.obs;
+  final checkFingerPrint = false.obs;
   final name = ''.obs;
 
   XFile? photo;
@@ -103,12 +104,14 @@ class MoreController extends GetxController {
   void checkFingerprint() async {
     final isAuthenticated = await LocalAuthApi.authenticate();
     if (isAuthenticated) {
+      checkFingerPrint.value = true;
       CustomSnackbar(
               message: 'Fingerprint authentication successful',
               title: 'Success')
           .showSuccess();
       print('Authentication Success');
     } else {
+      checkFingerPrint.value = false;
       CustomSnackbar(message: 'Fingerprint error', title: 'Success')
           .showWarning();
       print('Authentication Error');

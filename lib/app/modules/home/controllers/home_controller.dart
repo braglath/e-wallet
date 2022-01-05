@@ -1,4 +1,3 @@
-import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
