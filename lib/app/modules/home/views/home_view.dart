@@ -188,194 +188,191 @@ class HomeView extends GetView<HomeController> {
     String middleFirstFourNumbers = cardNumber.substring(4, 8);
     String middleSecondFourNumbers = cardNumber.substring(8, 12);
 
-    return FadedScaleAnimation(
-      Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Color(int.parse(cardColor)),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(
-                      5.0,
-                      5.0,
-                    ),
-                    blurRadius: 8.0,
-                    spreadRadius: 1.0,
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          Container(
+            height: 200,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Color(int.parse(cardColor)),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(
+                    5.0,
+                    5.0,
                   ),
-                ],
-                image: DecorationImage(
-                  image: AssetImage('assets/images/glitter.jpg'),
-                  fit: BoxFit.cover,
-                  invertColors: false,
-                  opacity: 0.1,
-                  colorFilter: ColorFilter.mode(
-                      Color(int.parse(cardColor)), BlendMode.lighten),
+                  blurRadius: 8.0,
+                  spreadRadius: 1.0,
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      cardDetails.name,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    GestureDetector(
-                      onTap: () => controller.cardNumberAuthentication(),
-                      child: Obx(() {
-                        return RichText(
-                          text: TextSpan(
-                            text: firstFourNumbers,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    letterSpacing: 2),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: controller.showCardNumber.isFalse
-                                    ? ' **** '
-                                    : ' $middleFirstFourNumbers ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline3
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                        letterSpacing: 2),
-                              ),
-                              TextSpan(
-                                text: controller.showCardNumber.isFalse
-                                    ? ' **** '
-                                    : ' $middleSecondFourNumbers ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline3
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                        letterSpacing: 2),
-                              ),
-                              TextSpan(
-                                text: lastFourNumbers,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline3
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                        letterSpacing: 2),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                    Row(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: 'Exp on - ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                ?.copyWith(
-                                    fontWeight: FontWeight.w400, fontSize: 14),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: cardDetails.expDate.toString(),
-                                style: Theme.of(context).textTheme.headline4,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 25,
-                        ),
-                        GestureDetector(
-                          onTap: () => controller.cvvAuthentication(),
-                          child: Obx(() {
-                            return RichText(
-                              text: TextSpan(
-                                text: 'CVV - ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline4
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: controller.showCvvNumber.isFalse
-                                        ? ' *** '
-                                        : ' ${cardDetails.cvvNumber.toString()} ',
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              ],
+              image: DecorationImage(
+                image: AssetImage('assets/images/glitter.jpg'),
+                fit: BoxFit.cover,
+                invertColors: false,
+                opacity: 0.1,
+                colorFilter: ColorFilter.mode(
+                    Color(int.parse(cardColor)), BlendMode.lighten),
               ),
             ),
-            IconButton(
-                onPressed: () {
-                  AdMobService().createInterAd();
-                  CustomDialogue(
-                    title: 'Remove card?',
-                    textConfirm: 'Confim',
-                    textCancel: 'Cancel',
-                    onpressedConfirm: () {
-                      controller.deleteCard(controller.cards[index].id!);
-                      AdMobService().showInterad();
-                    },
-                    onpressedCancel: () => Get.back(),
-                    contentWidget: Text(
-                      'You are about to remove this card.\nThis cannot be undone',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          ?.copyWith(color: Colors.white),
-                    ),
-                    isDismissible: true,
-                  ).showDialogue();
-                },
-                icon: FaIcon(
-                  FontAwesomeIcons.trash,
-                  color: Colors.white,
-                  size: 20,
-                )),
-            Positioned(
-              bottom: 5,
-              right: 15,
-              child: FaIcon(
-                cardDetails.cardManufacturer.contains('Visa')
-                    ? FontAwesomeIcons.ccVisa
-                    : cardDetails.cardManufacturer.contains('MasterCard')
-                        ? FontAwesomeIcons.ccMastercard
-                        : cardDetails.cardManufacturer.contains('RuPay')
-                            ? FontAwesomeIcons.moneyBillWaveAlt
-                            : FontAwesomeIcons.ccAmex,
-                size: 50,
-                color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cardDetails.name,
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  GestureDetector(
+                    onTap: () => controller.cardNumberAuthentication(),
+                    child: Obx(() {
+                      return RichText(
+                        text: TextSpan(
+                          text: firstFourNumbers,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w300,
+                                  letterSpacing: 2),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: controller.showCardNumber.isFalse
+                                  ? ' **** '
+                                  : ' $middleFirstFourNumbers ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      letterSpacing: 2),
+                            ),
+                            TextSpan(
+                              text: controller.showCardNumber.isFalse
+                                  ? ' **** '
+                                  : ' $middleSecondFourNumbers ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      letterSpacing: 2),
+                            ),
+                            TextSpan(
+                              text: lastFourNumbers,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      letterSpacing: 2),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                  Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: 'Exp on - ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w400, fontSize: 14),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: cardDetails.expDate.toString(),
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      GestureDetector(
+                        onTap: () => controller.cvvAuthentication(),
+                        child: Obx(() {
+                          return RichText(
+                            text: TextSpan(
+                              text: 'CVV - ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline4
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: controller.showCvvNumber.isFalse
+                                      ? ' *** '
+                                      : ' ${cardDetails.cvvNumber.toString()} ',
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          IconButton(
+              onPressed: () {
+                AdMobService().createInterAd();
+                CustomDialogue(
+                  title: 'Remove card?',
+                  textConfirm: 'Confim',
+                  textCancel: 'Cancel',
+                  onpressedConfirm: () {
+                    controller.deleteCard(controller.cards[index].id!);
+                    AdMobService().showInterad();
+                  },
+                  onpressedCancel: () => Get.back(),
+                  contentWidget: Text(
+                    'You are about to remove this card.\nThis cannot be undone',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        ?.copyWith(color: Colors.white),
+                  ),
+                  isDismissible: true,
+                ).showDialogue();
+              },
+              icon: FaIcon(
+                FontAwesomeIcons.trash,
+                color: Colors.white,
+                size: 20,
+              )),
+          Positioned(
+            bottom: 5,
+            right: 15,
+            child: FaIcon(
+              cardDetails.cardManufacturer.contains('Visa')
+                  ? FontAwesomeIcons.ccVisa
+                  : cardDetails.cardManufacturer.contains('MasterCard')
+                      ? FontAwesomeIcons.ccMastercard
+                      : cardDetails.cardManufacturer.contains('RuPay')
+                          ? FontAwesomeIcons.moneyBillWaveAlt
+                          : FontAwesomeIcons.ccAmex,
+              size: 50,
+              color: Colors.white,
+            ),
+          )
+        ],
       ),
     );
   }

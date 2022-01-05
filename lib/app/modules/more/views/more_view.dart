@@ -5,8 +5,10 @@ import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:e_wallet/app/modules/add/controllers/add_controller.dart';
 import 'package:e_wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
@@ -34,7 +36,7 @@ class MoreView extends GetView<MoreController> {
         reverse: true,
         child: Column(
           children: [
-            SizedBox(height: 25),
+            SizedBox(height: 20),
             profilePick(context),
             SizedBox(height: 25),
             Obx(() {
@@ -102,16 +104,28 @@ class MoreView extends GetView<MoreController> {
               title: 'Check fingerprilnt',
               onpressed: () => controller.checkFingerprint(),
             ),
-            Button(
-              controller: controller,
-              title: 'load ad',
-              onpressed: () => AdMobService().createInterAd(),
+            // Button(
+            //   controller: controller,
+            //   title: 'load ad',
+            //   onpressed: () => AdMobService().createInterAd(),
+            // ),
+            // Button(
+            //   controller: controller,
+            //   title: 'show ad',
+            //   onpressed: () => AdMobService().showInterad(),
+            // ),
+
+            SizedBox(
+              height: 25,
             ),
-            Button(
+            SecureModeSwitch(
               controller: controller,
-              title: 'show ad',
-              onpressed: () => AdMobService().showInterad(),
             ),
+            Text(
+              'Secure mode prevents users from taking screenshots or screen recording',
+              style: Theme.of(context).textTheme.caption,
+              textAlign: TextAlign.center,
+            )
           ],
         ),
       ),
@@ -208,6 +222,55 @@ class MoreView extends GetView<MoreController> {
           ),
         ),
       );
+}
+
+class SecureModeSwitch extends StatelessWidget {
+  const SecureModeSwitch({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final MoreController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(15),
+      child: GestureDetector(
+          onTap: () {
+            controller.toggleSecureMode();
+            print(controller.isSecureModeOn);
+          },
+          child: Row(
+            children: [
+              Text(
+                'Toggle secure mode',
+                style: GoogleFonts.roboto(
+                        fontSize: 22, fontWeight: FontWeight.bold)
+                    .copyWith(
+                        color: ThemeService().theme == ThemeMode.light
+                            ? ColorResourcesLight.mainLIGHTColor
+                            : Colors.white),
+              ),
+              Spacer(),
+              Obx(() {
+                return FlutterSwitch(
+                  activeColor: Colors.green,
+                  width: 55.0,
+                  height: 25.0,
+                  valueFontSize: 12.0,
+                  toggleSize: 18.0,
+                  value: controller.isSecureModeOn.value,
+                  // borderRadius: 30.0,
+                  // padding: 8.0,
+                  showOnOff: true,
+                  onToggle: (val) => controller.secureModeSwitch(val),
+                );
+              }),
+            ],
+          )),
+    );
+  }
 }
 
 class Button extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -13,7 +14,10 @@ class MoreController extends GetxController {
   final isLoading = false.obs;
   final profilePicture = ''.obs;
   final editName = false.obs;
+  final secureModeWindow = false.obs;
+  final isSecureModeOn = false.obs;
   final name = ''.obs;
+
   XFile? photo;
   final TextEditingController nameController = TextEditingController();
   final GlobalKey<FormState> profileNameKey = GlobalKey<FormState>();
@@ -22,6 +26,7 @@ class MoreController extends GetxController {
   void onInit() {
     super.onInit();
     initPackageInfo();
+    isSecureModeOn.value = UserDetails().readSecureModefromBox();
     // print('profile pic - ${UserDetails().readUserProfilePicfromBox()}');
   }
 
@@ -107,6 +112,26 @@ class MoreController extends GetxController {
       CustomSnackbar(message: 'Fingerprint error', title: 'Success')
           .showWarning();
       print('Authentication Error');
+    }
+  }
+
+  void secureModeSwitch(bool val) {
+    isSecureModeOn.value = val;
+    UserDetails().saveSecureMode(isSecureModeOn.value);
+    if (isSecureModeOn.isTrue) {
+      FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    } else {
+      FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+  }
+
+  void toggleSecureMode() {
+    isSecureModeOn.toggle();
+    UserDetails().saveSecureMode(isSecureModeOn.value);
+    if (isSecureModeOn.isTrue) {
+      FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    } else {
+      FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     }
   }
 }
