@@ -51,7 +51,7 @@ class MoreView extends GetView<MoreController> {
   }
 
   Text _secureModeCaption(BuildContext context) {
-    return Text(MorePageStrings.secureCaption,
+    return Text(MoreViewPageStrings.secureCaption,
         style: Theme.of(context).textTheme.caption,
         textAlign: TextAlign.center);
   }
@@ -144,36 +144,33 @@ class MoreView extends GetView<MoreController> {
         radius: 25,
         borderRadius: BorderRadius.circular(50),
         onTap: () => {},
-        child: Hero(
-          tag: MainStrings.profileHeroTag,
-          child: Center(
-              child: CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 55,
+        child: Center(
             child: CircleAvatar(
-              radius: 52,
-              child: UserDetails().readUserProfilePicfromBox().isEmpty
-                  ? Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: 50,
-                    )
-                  : null,
-              backgroundColor: ThemeService().theme == ThemeMode.light
-                  ? ColorResourcesLight.mainLIGHTColor
-                  : ColorResourcesDark.mainDARKColor,
-              foregroundImage: controller.profilePicture.value.isEmpty
-                  ? UserDetails().readUserProfilePicfromBox().isEmpty
-                      ? null
-                      : FileImage(
-                          File(UserDetails().readUserProfilePicfromBox()),
-                        )
-                  : FileImage(
-                      File(controller.profilePicture.value),
-                    ),
-            ),
-          )),
-        ),
+          backgroundColor: Colors.white,
+          radius: 55,
+          child: CircleAvatar(
+            radius: 52,
+            child: UserDetails().readUserProfilePicfromBox().isEmpty
+                ? Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 50,
+                  )
+                : null,
+            backgroundColor: ThemeService().theme == ThemeMode.light
+                ? ColorResourcesLight.mainLIGHTColor
+                : ColorResourcesDark.mainDARKColor,
+            foregroundImage: controller.profilePicture.value.isEmpty
+                ? UserDetails().readUserProfilePicfromBox().isEmpty
+                    ? null
+                    : FileImage(
+                        File(UserDetails().readUserProfilePicfromBox()),
+                      )
+                : FileImage(
+                    File(controller.profilePicture.value),
+                  ),
+          ),
+        )),
       );
     });
   }

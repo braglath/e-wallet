@@ -1,10 +1,9 @@
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-
 import 'package:e_wallet/app/data/model/card_model.dart';
 import 'package:e_wallet/app/data/services/databse.dart';
 import 'package:e_wallet/app/data/services/google_ad_service.dart';
@@ -20,8 +19,8 @@ class AddController extends GetxController {
   final currentDate = DateTime.now().obs;
   final DateFormat format = DateFormat('MM/yyyy');
   final formattedDate = ''.obs;
-  final cardtype = 'Pick card type'.obs;
-  final cardManufacturer = 'Pick card manufacturer'.obs;
+  final cardtype = CardType.pickCardType.obs;
+  final cardManufacturer = CardManufacturers.pickCardManufacturer.obs;
   final screenPickerColor = ColorResourcesLight.mainLIGHTColor.obs;
 
   @override
@@ -29,38 +28,38 @@ class AddController extends GetxController {
 
   String? nameValidator(String? value) {
     if (value!.isEmpty) {
-      return 'Name cannot be empty';
+      return AddControllerPageStrings.nameEmpty;
     }
     if (RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(value)) {
-      return 'Cannot have special characters or numbers';
+      return AddControllerPageStrings.noSpclCharc;
     }
     return null;
   }
 
   String? cardValidator(String? value) {
     if (value!.isEmpty) {
-      return 'Card number cannot be empty';
+      return AddControllerPageStrings.nameEmpty;
     }
     if (RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Only numbers are accepted here';
+      return AddControllerPageStrings.onlyNumbers;
     }
 
     if (value.length < 16) {
-      return 'Cannot be less than 16 characters';
+      return AddControllerPageStrings.noLess16Charc;
     }
     return null;
   }
 
   String? cvvValidator(String? value) {
     if (value!.isEmpty) {
-      return 'Card number cannot be empty';
+      return AddControllerPageStrings.cvvEmpty;
     }
     if (RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Only numbers are accepted here';
+      return AddControllerPageStrings.onlyNumbers;
     }
 
     if (value.length < 3) {
-      return 'Cannot be less than 3 characters';
+      return AddControllerPageStrings.noLess3Charc;
     }
     return null;
   }
@@ -72,10 +71,13 @@ class AddController extends GetxController {
       lastDate: DateTime(2050),
       initialDate: currentDate.value,
     ).then((date) {
+      print('format month - ${date?.day}');
+      print('format year - ${date?.year}');
       if (date != null) {
         currentDate.value = date;
+        print('format current - ${currentDate.value}');
         formattedDate.value = format.format(currentDate.value);
-        // print('formatted date - ${formattedDate.value}');
+        print('formatted formatted - ${formattedDate.value}');
       }
     });
   }
@@ -97,9 +99,12 @@ class AddController extends GetxController {
   Future addCard() async {
     if (formKey.currentState!.validate()) {
       if (formattedDate.value.contains(format.format(DateTime.now())) ||
-          cardtype.value.contains('Pick card type') ||
-          cardManufacturer.value.contains('Pick card manufacturer')) {
-        CustomSnackbar(title: 'Warning', message: 'Enter all card details')
+          cardtype.value.contains(CardType.pickCardType) ||
+          cardManufacturer.value
+              .contains(CardManufacturers.pickCardManufacturer)) {
+        CustomSnackbar(
+                title: MainStrings.warning,
+                message: AddControllerPageStrings.enterAllCardDetails)
             .showWarning();
       } else {
         // print(
@@ -117,7 +122,9 @@ class AddController extends GetxController {
         await CardDatabase.instance.create(card).whenComplete(() {
           homeController.refreshCards();
           homeController.refresh();
-          CustomSnackbar(title: 'Success', message: 'Card added successfully')
+          CustomSnackbar(
+                  title: MainStrings.success,
+                  message: AddControllerPageStrings.cardAddedSuccess)
               .showSuccess();
           AdMobService().showInterad();
           scrollToAddProductPage();
@@ -133,8 +140,8 @@ class AddController extends GetxController {
     numberController.clear();
     formattedDate.value = format.format(DateTime.now());
     cvvController.clear();
-    cardtype.value = 'Pick card type';
-    cardManufacturer.value = 'Pick card manufacturer';
+    cardtype.value = CardType.pickCardType;
+    cardManufacturer.value = CardManufacturers.pickCardManufacturer;
     screenPickerColor.value = Color(0xffE45C3A);
   }
 

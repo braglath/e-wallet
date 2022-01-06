@@ -1,12 +1,11 @@
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:e_wallet/app/data/services/local_auth_api.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/views/views/custom_snackbars.dart';
@@ -38,7 +37,7 @@ class MoreController extends GetxController {
 
   String? nameValidator(String? value) {
     if (value!.isEmpty) {
-      return 'Name cannot be empty';
+      return AddControllerPageStrings.nameEmpty;
     }
     return null;
   }
@@ -74,7 +73,9 @@ class MoreController extends GetxController {
           profilePicture.value = profilePic;
           Get.back();
         } else {
-          CustomSnackbar(title: 'Warning', message: 'Failed to pick image')
+          CustomSnackbar(
+                  title: MainStrings.warning,
+                  message: MoreControllerPageStrings.failedPickImage)
               .showWarning();
           isLoading.value = false;
           Get.back();
@@ -85,7 +86,9 @@ class MoreController extends GetxController {
       Get.back();
       isLoading.value = false;
 
-      CustomSnackbar(title: 'Warning', message: 'Failed to pick image, $e')
+      CustomSnackbar(
+              title: MainStrings.warning,
+              message: '${MoreControllerPageStrings.failedPickImage}, $e')
           .showWarning();
     }
   }
@@ -95,15 +98,17 @@ class MoreController extends GetxController {
     if (isAuthenticated) {
       checkFingerPrint.value = true;
       CustomSnackbar(
-              message: 'Fingerprint authentication successful',
-              title: 'Success')
+              message: MoreControllerPageStrings.fingerAuthSucc,
+              title: MainStrings.success)
           .showSuccess();
-      print('Authentication Success');
+      // print('Authentication Success');
     } else {
       checkFingerPrint.value = false;
-      CustomSnackbar(message: 'Fingerprint error', title: 'Success')
+      CustomSnackbar(
+              message: MoreControllerPageStrings.fingerAuthErr,
+              title: MainStrings.warning)
           .showWarning();
-      print('Authentication Error');
+      // print('Authentication Error');
     }
   }
 

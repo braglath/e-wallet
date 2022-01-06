@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -79,7 +80,6 @@ class HomeView extends GetView<HomeController> {
               controller: controller.tabController,
             ),
           ),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
           floatingActionButton: Obx(() {
             return controller.shouldAutoscroll.value &&
                     controller.tabController.index == 0
@@ -87,7 +87,7 @@ class HomeView extends GetView<HomeController> {
                     FloatingActionButton(
                         heroTag: null,
                         mini: true,
-                        tooltip: 'scroll to top',
+                        tooltip: HomeViewPageStrings.fabToolTipScrollTop,
                         child: FaIcon(
                           FontAwesomeIcons.chevronUp,
                           color: Colors.white,
@@ -103,7 +103,7 @@ class HomeView extends GetView<HomeController> {
                         FloatingActionButton(
                             heroTag: null,
                             mini: true,
-                            tooltip: 'scroll to bottom',
+                            tooltip: HomeViewPageStrings.fabToolTipScrollBottom,
                             child: FaIcon(
                               FontAwesomeIcons.chevronDown,
                               color: Colors.white,
@@ -149,7 +149,7 @@ class HomeView extends GetView<HomeController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "You havn't added any card yet",
+                          HomeViewPageStrings.noCardsAdded,
                           style: GoogleFonts.roboto(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -163,7 +163,7 @@ class HomeView extends GetView<HomeController> {
                         ElevatedButton(
                           onPressed: () => controller.scrollToAddProductPage(1),
                           child: Text(
-                            'Add card',
+                            MainStrings.addCard,
                             style: GoogleFonts.roboto(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -209,7 +209,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
               image: DecorationImage(
-                image: AssetImage('assets/images/glitter.jpg'),
+                image: AssetImage(AssetStrings.cardGlitter),
                 fit: BoxFit.cover,
                 invertColors: false,
                 opacity: 0.1,
@@ -224,7 +224,7 @@ class HomeView extends GetView<HomeController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    cardDetails.name,
+                    cardDetails.name.toUpperCase(),
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   GestureDetector(
@@ -331,16 +331,16 @@ class HomeView extends GetView<HomeController> {
               onPressed: () {
                 AdMobService().createInterAd();
                 CustomDialogue(
-                  title: 'Remove card?',
-                  textConfirm: 'Confim',
-                  textCancel: 'Cancel',
+                  title: MainStrings.removeCard,
+                  textConfirm: MainStrings.confirm,
+                  textCancel: MainStrings.cancel,
                   onpressedConfirm: () {
                     controller.deleteCard(controller.cards[index].id!);
                     AdMobService().showInterad();
                   },
                   onpressedCancel: () => Get.back(),
                   contentWidget: Text(
-                    'You are about to remove this card.\nThis cannot be undone',
+                    HomeViewPageStrings.aboutToRemoveCard,
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
@@ -359,11 +359,13 @@ class HomeView extends GetView<HomeController> {
             bottom: 5,
             right: 15,
             child: FaIcon(
-              cardDetails.cardManufacturer.contains('Visa')
+              cardDetails.cardManufacturer.contains(CardManufacturers.visa)
                   ? FontAwesomeIcons.ccVisa
-                  : cardDetails.cardManufacturer.contains('MasterCard')
+                  : cardDetails.cardManufacturer
+                          .contains(CardManufacturers.master)
                       ? FontAwesomeIcons.ccMastercard
-                      : cardDetails.cardManufacturer.contains('RuPay')
+                      : cardDetails.cardManufacturer
+                              .contains(CardManufacturers.rupay)
                           ? FontAwesomeIcons.moneyBillWaveAlt
                           : FontAwesomeIcons.ccAmex,
               size: 50,
@@ -385,34 +387,31 @@ class HomeView extends GetView<HomeController> {
           radius: 15,
           borderRadius: BorderRadius.circular(50),
           onTap: () => controller.scrollToAddProductPage(2),
-          child: Hero(
-            tag: 'profileicon',
-            child: Center(
+          child: Center(
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 14,
               child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 14,
-                child: CircleAvatar(
-                  radius: 12,
-                  child: UserDetails().readUserProfilePicfromBox().isEmpty
-                      ? Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 18,
-                        )
-                      : null,
-                  backgroundColor: ThemeService().theme == ThemeMode.light
-                      ? ColorResourcesLight.mainLIGHTColor
-                      : ColorResourcesDark.mainDARKColor,
-                  foregroundImage: moreController.profilePicture.value.isEmpty
-                      ? UserDetails().readUserProfilePicfromBox().isEmpty
-                          ? null
-                          : FileImage(
-                              File(UserDetails().readUserProfilePicfromBox()),
-                            )
-                      : FileImage(
-                          File(moreController.profilePicture.value),
-                        ),
-                ),
+                radius: 12,
+                child: UserDetails().readUserProfilePicfromBox().isEmpty
+                    ? Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 18,
+                      )
+                    : null,
+                backgroundColor: ThemeService().theme == ThemeMode.light
+                    ? ColorResourcesLight.mainLIGHTColor
+                    : ColorResourcesDark.mainDARKColor,
+                foregroundImage: moreController.profilePicture.value.isEmpty
+                    ? UserDetails().readUserProfilePicfromBox().isEmpty
+                        ? null
+                        : FileImage(
+                            File(UserDetails().readUserProfilePicfromBox()),
+                          )
+                    : FileImage(
+                        File(moreController.profilePicture.value),
+                      ),
               ),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:e_wallet/app/data/theme/theme_data.dart';
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -54,7 +55,7 @@ void main() async {
 
   runApp(
     GetMaterialApp(
-      title: "E-Wallet lite",
+      title: AppTitle.appTitle,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme: Themes.light,

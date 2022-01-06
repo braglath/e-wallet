@@ -1,3 +1,4 @@
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   final cards = <CardModel>[].obs;
   final scrollController = ScrollController().obs;
   var shouldAutoscroll = false.obs;
-  final DateFormat format = DateFormat('MM/yyyy');
+  final DateFormat format = DateFormat(MainStrings.mmyy);
   DateTime timeBackButtonPressed = DateTime.now();
   final showCardNumber = false.obs;
   final showCvvNumber = false.obs;
@@ -23,14 +24,14 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   final List<Tab> myTabs = <Tab>[
     Tab(
       icon: FaIcon(FontAwesomeIcons.home),
-      text: 'Home',
+      text: TabNames.home,
     ),
     Tab(
-      text: 'Add',
+      text: TabNames.add,
       icon: FaIcon(FontAwesomeIcons.plusSquare),
     ),
     Tab(
-      text: 'More',
+      text: TabNames.more,
       icon: FaIcon(FontAwesomeIcons.user),
     ),
   ];
@@ -103,7 +104,9 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     await CardDatabase.instance.delete(id);
     cards.removeWhere((element) => element.id == id);
     Get.back();
-    CustomSnackbar(title: 'Success', message: 'Card removed successfully')
+    CustomSnackbar(
+            title: MainStrings.success,
+            message: HomeControllerPageStrings.cardRemovedSucc)
         .showSuccess();
     isLoading.value = false;
   }
@@ -114,8 +117,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     timeBackButtonPressed = DateTime.now();
     if (isExitWarning) {
       CustomSnackbar(
-              title: 'Exiting the app',
-              message: 'Press back button again to exit the app')
+              title: HomeControllerPageStrings.exitingApp,
+              message: HomeControllerPageStrings.pressBackAgain)
           .showWarning();
       return false;
     } else {
@@ -128,10 +131,16 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final isAuthenticated = await LocalAuthApi.authenticate();
     if (isAuthenticated) {
       showCardNumber.value = true;
-      print('Authentication Success');
+      CustomSnackbar(
+              title: MainStrings.success,
+              message: HomeControllerPageStrings.cardnumberWillBeHidden)
+          .showSuccess();
+      Future.delayed(Duration(seconds: 5), () => showCardNumber.value = false);
+      // print('Authentication Success');
     } else {
       showCardNumber.value = false;
-      print('Authentication Error');
+
+      // print('Authentication Error');
     }
   }
 
@@ -139,10 +148,15 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final isAuthenticated = await LocalAuthApi.authenticate();
     if (isAuthenticated) {
       showCvvNumber.value = true;
-      print('Authentication Success');
+      CustomSnackbar(
+              title: MainStrings.success,
+              message: HomeControllerPageStrings.cvvnumberWillBeHidden)
+          .showSuccess();
+      Future.delayed(Duration(seconds: 5), () => showCvvNumber.value = false);
+      // print('Authentication Success');
     } else {
       showCvvNumber.value = false;
-      print('Authentication Error');
+      // print('Authentication Error');
     }
   }
 }

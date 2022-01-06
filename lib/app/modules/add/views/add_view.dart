@@ -1,29 +1,28 @@
+import 'package:e_wallet/app/data/utils/usable_strings.dart';
+import 'package:e_wallet/app/views/views/customtooltip_view.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-
-import 'package:e_wallet/app/data/services/google_ad_service.dart';
 import 'package:e_wallet/app/data/storage/user_details_storage.dart';
 import 'package:e_wallet/app/data/theme/theme_service.dart';
 import 'package:e_wallet/app/data/utils/color_resources.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../controllers/add_controller.dart';
 
 class AddView extends GetView<AddController> {
   final List<String> cardTypeList = [
-    'Pick card type',
-    'Debit',
-    'Credit',
+    CardType.pickCardType,
+    CardType.debit,
+    CardType.credit,
   ];
 
   final List<String> cardManufacturerList = [
-    'Pick card manufacturer',
-    'Visa',
-    'MasterCard',
-    'RuPay',
-    'American Express',
+    CardManufacturers.pickCardManufacturer,
+    CardManufacturers.visa,
+    CardManufacturers.master,
+    CardManufacturers.rupay,
+    CardManufacturers.americaExp,
   ];
 
   final List<IconData> cardManufacturerIconList = [
@@ -45,7 +44,7 @@ class AddView extends GetView<AddController> {
     controller.nameController.text =
         UserDetails().readUserNamefromBox().contains('')
             ? UserDetails().readUserNamefromBox()
-            : 'Name';
+            : MainStrings.name;
 
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
@@ -54,6 +53,8 @@ class AddView extends GetView<AddController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: 10),
+            _note(context),
             SizedBox(height: 20),
             _name(context),
             _cardNumber(context),
@@ -64,52 +65,74 @@ class AddView extends GetView<AddController> {
             _cardColorPicker(context),
             SizedBox(height: 20),
             _addCardButton(context),
-            SizedBox(height: 75),
+            SizedBox(height: 85),
           ],
         ),
       ),
     );
   }
 
-  Widget _name(context) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-            onEditingComplete: () => FocusScope.of(context).nextFocus(),
-            validator: (value) => controller.nameValidator(value),
-            cursorColor: ThemeService().theme == ThemeMode.light
-                ? ColorResourcesLight.mainLIGHTColor
-                : Colors.white,
-            style: TextStyle(
-                color: ThemeService().theme == ThemeMode.light
+  Widget _name(context) => Stack(
+        alignment: Alignment.topRight,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                validator: (value) => controller.nameValidator(value),
+                cursorColor: ThemeService().theme == ThemeMode.light
                     ? ColorResourcesLight.mainLIGHTColor
-                    : Colors.white),
-            controller: controller.nameController,
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              labelText: 'Name',
-            )),
+                    : Colors.white,
+                style: TextStyle(
+                    color: ThemeService().theme == ThemeMode.light
+                        ? ColorResourcesLight.mainLIGHTColor
+                        : Colors.white),
+                controller: controller.nameController,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: MainStrings.name,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: Customtooltip(
+              message: AddViewPageStrings.tooltipName,
+            ),
+          ),
+        ],
       );
 
-  Widget _cardNumber(context) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-            validator: (value) => controller.cardValidator(value),
-            onEditingComplete: () => FocusScope.of(context).unfocus(),
-            cursorColor: ThemeService().theme == ThemeMode.light
-                ? ColorResourcesLight.mainLIGHTColor
-                : Colors.white,
-            style: TextStyle(
-                color: ThemeService().theme == ThemeMode.light
+  Widget _cardNumber(context) => Stack(
+        alignment: Alignment.topRight,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+                validator: (value) => controller.cardValidator(value),
+                onEditingComplete: () => FocusScope.of(context).unfocus(),
+                cursorColor: ThemeService().theme == ThemeMode.light
                     ? ColorResourcesLight.mainLIGHTColor
-                    : Colors.white),
-            controller: controller.numberController,
-            maxLength: 16,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              labelText: 'Card number',
-            )),
+                    : Colors.white,
+                style: TextStyle(
+                    color: ThemeService().theme == ThemeMode.light
+                        ? ColorResourcesLight.mainLIGHTColor
+                        : Colors.white),
+                controller: controller.numberController,
+                maxLength: 16,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: MainStrings.cardNumber,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: Customtooltip(
+              message: AddViewPageStrings.tooltipCardNumber,
+            ),
+          ),
+        ],
       );
 
   Widget _cardExpDate(context) => Obx(() {
@@ -118,9 +141,22 @@ class AddView extends GetView<AddController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Exp date',
-                  style: Theme.of(context).textTheme.headline4,
+                Row(
+                  children: [
+                    Text(
+                      MainStrings.expDate,
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15.0),
+                      child: Customtooltip(
+                        message: AddViewPageStrings.tooltipExpDate,
+                      ),
+                    ),
+                  ],
                 ),
                 expDate(context)
               ],
@@ -133,7 +169,7 @@ class AddView extends GetView<AddController> {
       children: [
         Text(
           controller.formattedDate.value.isEmpty
-              ? 'MM/YYYY'
+              ? MainStrings.mmyy
               : controller.formattedDate.value.toString(),
           style: Theme.of(context).textTheme.headline5?.copyWith(
               fontSize: 20,
@@ -148,11 +184,9 @@ class AddView extends GetView<AddController> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Pick date',
+                MainStrings.pickDate,
               ),
-              SizedBox(
-                width: 10,
-              ),
+              SizedBox(width: 10),
               FaIcon(FontAwesomeIcons.calendarAlt)
             ],
           ),
@@ -162,25 +196,36 @@ class AddView extends GetView<AddController> {
   }
 
   Widget _cvvNumber(context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-          onEditingComplete: () => FocusScope.of(context).unfocus(),
-          validator: (value) => controller.cvvValidator(value),
-          cursorColor: ThemeService().theme == ThemeMode.light
-              ? ColorResourcesLight.mainLIGHTColor
-              : Colors.white,
-          style: TextStyle(
-              color: ThemeService().theme == ThemeMode.light
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+              onEditingComplete: () => FocusScope.of(context).unfocus(),
+              validator: (value) => controller.cvvValidator(value),
+              cursorColor: ThemeService().theme == ThemeMode.light
                   ? ColorResourcesLight.mainLIGHTColor
-                  : Colors.white),
-          controller: controller.cvvController,
-          maxLength: 3,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: 'CVV number',
-          )),
+                  : Colors.white,
+              style: TextStyle(
+                  color: ThemeService().theme == ThemeMode.light
+                      ? ColorResourcesLight.mainLIGHTColor
+                      : Colors.white),
+              controller: controller.cvvController,
+              maxLength: 3,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                labelText: MainStrings.cvvNumber,
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 15.0),
+          child: Customtooltip(
+            message: AddViewPageStrings.tooltipCvvNumber,
+          ),
+        ),
+      ],
     );
   }
 
@@ -189,9 +234,20 @@ class AddView extends GetView<AddController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Type',
-              style: Theme.of(context).textTheme.headline4,
+            Row(
+              children: [
+                Text(
+                  MainStrings.type,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                SizedBox(width: 10),
+                Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: Customtooltip(
+                    message: AddViewPageStrings.tooltipCardType,
+                  ),
+                ),
+              ],
             ),
             cardTypePicker(),
           ],
@@ -243,9 +299,20 @@ class AddView extends GetView<AddController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Manufacturer',
-              style: Theme.of(context).textTheme.headline4,
+            Row(
+              children: [
+                Text(
+                  AddViewPageStrings.manufacturer,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                SizedBox(width: 10),
+                Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: Customtooltip(
+                    message: AddViewPageStrings.tooltipCardManufacturer,
+                  ),
+                ),
+              ],
             ),
             cardManufacturerPicker(),
           ],
@@ -312,7 +379,7 @@ class AddView extends GetView<AddController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Select card color',
+                      AddViewPageStrings.selectCardColor,
                       style: Theme.of(context).textTheme.headline4,
                     ),
                     CircleAvatar(
@@ -359,7 +426,7 @@ class AddView extends GetView<AddController> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Add Card',
+              MainStrings.addCard,
               style: Theme.of(context)
                   .textTheme
                   .headline3
@@ -372,4 +439,29 @@ class AddView extends GetView<AddController> {
           ],
         ),
       ));
+
+  Widget _note(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              AddViewPageStrings.note,
+              style: GoogleFonts.roboto(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: ThemeService().theme == ThemeMode.light
+                      ? ColorResourcesLight.mainLIGHTColor
+                      : ColorResourcesDark.mainDARKColor),
+            ),
+            Text(
+              AddViewPageStrings.noteContent,
+              style:
+                  Theme.of(context).textTheme.caption?.copyWith(fontSize: 12),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
+      );
 }
